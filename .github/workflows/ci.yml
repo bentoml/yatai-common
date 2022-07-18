@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ v* ] #trigger on tags start with v, eg v1.0.0
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  golint:
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+
+    steps:
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.18' # The Go version to download (if necessary) and use.
+
+      - uses: actions/checkout@v2
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v2.5.2
+
+concurrency:
+  group: yatai-common-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
