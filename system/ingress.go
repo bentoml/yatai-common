@@ -49,7 +49,7 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 	podName := os.Getenv("POD_NAME")
 	if podName == "" {
 		// random string
-		podName = utils.RandString(10)
+		podName = strings.ToLower(utils.RandString(10))
 	}
 
 	ing, err := ingressCli.Create(ctx, &networkingv1.Ingress{
