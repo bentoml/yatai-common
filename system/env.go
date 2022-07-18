@@ -1,8 +1,9 @@
 package system
 
 import (
-	"fmt"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -12,8 +13,9 @@ const (
 	// label.
 	ResourceLabelEnvKey = "SYSTEM_RESOURCE_LABEL"
 
-	MagicDNSEnvKey  = "MAGIC_DNS"
-	DefaultMagicDNS = "sslip.io"
+	DefaultNamespace = "yatai-system"
+	MagicDNSEnvKey   = "MAGIC_DNS"
+	DefaultMagicDNS  = "sslip.io"
 )
 
 // GetNamespace returns the name of the K8s namespace where our system components
@@ -23,17 +25,8 @@ func GetNamespace() string {
 		return ns
 	}
 
-	panic(fmt.Sprintf(`The environment variable %q is not set
-
-If this is a process running on Kubernetes, then it should be using the downward
-API to initialize this variable via:
-
-  env:
-  - name: %s
-    valueFrom:
-      fieldRef:
-        fieldPath: metadata.namespace
-`, NamespaceEnvKey, NamespaceEnvKey))
+	logrus.Warnf("%s environment variable not set, using default namespace %s", NamespaceEnvKey, DefaultNamespace)
+	return DefaultNamespace
 }
 
 // GetResourceLabel returns the label key identifying K8s objects our system
