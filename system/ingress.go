@@ -32,6 +32,14 @@ func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ing
 	}
 
 	ingressClassName = consts.DefaultIngressClassName
+
+	configMapCli := cliset.CoreV1().ConfigMaps(GetNamespace())
+	_, err = configMapCli.Patch(ctx, consts.KubeConfigMapNameNetworkConfig, types.StrategicMergePatchType, []byte(fmt.Sprintf(`{"data":{"%s":"%s"}}`, consts.NetworkConfigKeyIngressClass, ingressClassName)), metav1.PatchOptions{})
+	if err != nil {
+		err = errors.Wrapf(err, "failed to patch configmap %s", consts.KubeConfigMapNameNetworkConfig)
+		return
+	}
+
 	return
 }
 
