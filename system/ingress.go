@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -103,6 +104,7 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 	// How long to wait for objects.
 	waitTimeout := 20 * time.Minute
 
+	logrus.Infof("Waiting for ingress %s to be ready", ing.Name)
 	// Wait for the Ingress to be Ready.
 	if err = wait.PollImmediate(pollInterval, waitTimeout, func() (done bool, err error) {
 		ing, err = ingressCli.Get(
@@ -115,6 +117,7 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 		err = errors.Wrapf(err, "failed to wait for ingress %s to be ready", ing.Name)
 		return
 	}
+	logrus.Infof("Ingress %s is ready", ing.Name)
 
 	address := ing.Status.LoadBalancer.Ingress[0]
 
