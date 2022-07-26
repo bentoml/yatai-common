@@ -27,7 +27,7 @@ func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ing
 		return
 	}
 
-	ingressClassName = strings.TrimSpace(configMap.Data[consts.NetworkConfigKeyIngressClass])
+	ingressClassName = strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressClass])
 	if ingressClassName != "" {
 		return
 	}
@@ -45,10 +45,10 @@ func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ing
 
 	ingressClassName = ingressClassList.Items[0].Name
 
-	logrus.Infof("you have not set the %s in the network config, so select the first existing ingressclass `%s` in your cluster, and set it to the network config", consts.NetworkConfigKeyIngressClass, ingressClassName)
+	logrus.Infof("you have not set the %s in the network config, so select the first existing ingressclass `%s` in your cluster, and set it to the network config", consts.KubeConfigMapKeyNetworkConfigIngressClass, ingressClassName)
 
 	configMapCli := cliset.CoreV1().ConfigMaps(configMap.Namespace)
-	_, err = configMapCli.Patch(ctx, configMap.Name, types.StrategicMergePatchType, []byte(fmt.Sprintf(`{"data":{"%s":"%s"}}`, consts.NetworkConfigKeyIngressClass, ingressClassName)), metav1.PatchOptions{})
+	_, err = configMapCli.Patch(ctx, configMap.Name, types.StrategicMergePatchType, []byte(fmt.Sprintf(`{"data":{"%s":"%s"}}`, consts.KubeConfigMapKeyNetworkConfigIngressClass, ingressClassName)), metav1.PatchOptions{})
 	if err != nil {
 		err = errors.Wrapf(err, "failed to patch configmap %s", consts.KubeConfigMapNameNetworkConfig)
 		return
@@ -160,9 +160,9 @@ func GetDomainSuffix(ctx context.Context, cliset *kubernetes.Clientset) (domainS
 		return
 	}
 
-	domainSuffix = strings.TrimSpace(configMap.Data[consts.NetworkConfigKeyDomainSuffix])
+	domainSuffix = strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigDomainSuffix])
 	if domainSuffix != "" {
-		logrus.Infof("The %s in the network config has already set to `%s`", consts.NetworkConfigKeyDomainSuffix, domainSuffix)
+		logrus.Infof("The %s in the network config has already set to `%s`", consts.KubeConfigMapKeyNetworkConfigDomainSuffix, domainSuffix)
 		return
 	}
 
@@ -177,10 +177,10 @@ func GetDomainSuffix(ctx context.Context, cliset *kubernetes.Clientset) (domainS
 
 	domainSuffix = fmt.Sprintf("%s.%s", ip, magicDNS)
 
-	logrus.Infof("you have not set the %s in the network config, so use magic DNS to generate a domain suffix automatically: `%s`, and set it to the network config", consts.NetworkConfigKeyDomainSuffix, domainSuffix)
+	logrus.Infof("you have not set the %s in the network config, so use magic DNS to generate a domain suffix automatically: `%s`, and set it to the network config", consts.KubeConfigMapKeyNetworkConfigDomainSuffix, domainSuffix)
 
 	configMapCli := cliset.CoreV1().ConfigMaps(configMap.Namespace)
-	_, err = configMapCli.Patch(ctx, configMap.Name, types.MergePatchType, []byte(fmt.Sprintf(`{"data":{"%s":"%s"}}`, consts.NetworkConfigKeyDomainSuffix, domainSuffix)), metav1.PatchOptions{})
+	_, err = configMapCli.Patch(ctx, configMap.Name, types.MergePatchType, []byte(fmt.Sprintf(`{"data":{"%s":"%s"}}`, consts.KubeConfigMapKeyNetworkConfigDomainSuffix, domainSuffix)), metav1.PatchOptions{})
 	if err != nil {
 		err = errors.Wrapf(err, "failed to patch configmap %s", consts.KubeConfigMapNameNetworkConfig)
 		return

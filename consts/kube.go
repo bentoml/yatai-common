@@ -7,9 +7,8 @@ import (
 )
 
 const (
-	// nolint: gosec
-	KubeSecretNameRegcred         = "yatai-regcred"
-	KubeIngressClassName          = "yatai-ingress"
+	KubeIngressClassName = "yatai-ingress"
+
 	KubeLabelYataiSelector        = "yatai.ai/selector"
 	KubeLabelYataiBentoRepository = "yatai.ai/bento-repository"
 	KubeLabelYataiBento           = "yatai.ai/bento"
@@ -25,6 +24,7 @@ const (
 	KubeNamespaceYataiOperators         = "yatai-operators"
 	KubeNamespaceYataiComponents        = "yatai-components"
 
+	KubeNamespaceYataiSystem              = "yatai-system"
 	KubeNamespaceYataiDeploymentComponent = "yatai-deployment"
 
 	KubeLabelMcdInfraCli               = "mcd-infra-cli"
@@ -125,6 +125,40 @@ const (
 	KubeLabelNodeResourceResizeMemory = "mcd.io/resize-node-memory"
 
 	KubeConfigMapNameNetworkConfig = "network"
+
+	KubeConfigMapKeyNetworkConfigDomainSuffix = "domain-suffix"
+	KubeConfigMapKeyNetworkConfigIngressClass = "ingress-class"
+
+	KubeConfigMapNameS3Config = "s3"
+
+	KubeConfigMapKeyS3ConfigEndpoint            = "endpoint"
+	KubeConfigMapKeyS3ConfigAccessKeySecretName = "access-key-secret-name"
+	KubeConfigMapKeyS3ConfigAccessKeySecretKey  = "access-key-secret-key"
+	KubeConfigMapKeyS3ConfigSecretKeySecretName = "secret-key-secret-name"
+	KubeConfigMapKeyS3ConfigSecretKeySecretKey  = "secret-key-secret-key"
+	KubeConfigMapKeyS3ConfigRegion              = "region"
+	KubeConfigMapKeyS3ConfigBucketName          = "bucket-name"
+	KubeConfigMapKeyS3ConfigSecure              = "secure"
+
+	KubeConfigMapNameDockerRegistryConfig = "docker-registry"
+
+	KubeConfigMapKeyDockerRegistryConfigBentoRepositoryName = "bento-repository-name"
+	KubeConfigMapKeyDockerRegistryConfigModelRepositoryName = "model-repository-name"
+	KubeConfigMapKeyDockerRegistryConfigServer              = "server"
+	KubeConfigMapKeyDockerRegistryConfigUsername            = "username"
+	KubeConfigMapKeyDockerRegistryConfigPasswordSecretName  = "password-secret-name"
+	KubeConfigMapKeyDockerRegistryConfigPasswordSecretKey   = "password-secret-key"
+	KubeConfigMapKeyDockerRegistryConfigSecure              = "secure"
+
+	KubeConfigMapNameYataiConfig = "yatai"
+
+	KubeConfigMapKeyYataiConfigEndpoint           = "endpoint"
+	KubeConfigMapKeyYataiConfigClusterName        = "cluster-name"
+	KubeConfigMapKeyYataiConfigApiTokenSecretName = "api-token-secret-name"
+	KubeConfigMapKeyYataiConfigApiTokenSecretKey  = "api-token-secret-key"
+
+	// nolint: gosec
+	KubeSecretNameRegcred = "yatai-regcred"
 )
 
 var KubeListEverything = metav1.ListOptions{

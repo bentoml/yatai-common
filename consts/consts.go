@@ -24,7 +24,4 @@ const (
 	NoneStr = "None"
 
 	AmazonS3Endpoint = "s3.amazonaws.com"
-
-	NetworkConfigKeyDomainSuffix = "domain-suffix"
-	NetworkConfigKeyIngressClass = "ingress-class"
 )
