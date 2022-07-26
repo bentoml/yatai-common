@@ -61,6 +61,7 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 		podName = strings.ToLower(utils.RandString(10))
 	}
 
+	logrus.Infof("Creating ingress %s to get a ingress IP automatically", ingName)
 	ing, err := ingressCli.Create(ctx, &networkingv1.Ingress{
 		ObjectMeta: metav1.ObjectMeta{
 			GenerateName: ingName,
@@ -148,6 +149,7 @@ func GetDomainSuffix(ctx context.Context, cliset *kubernetes.Clientset) (domainS
 
 	domainSuffix = strings.TrimSpace(configMap.Data[consts.NetworkConfigKeyDomainSuffix])
 	if domainSuffix != "" {
+		logrus.Infof("The domain suffix has already set to %s", domainSuffix)
 		return
 	}
 
@@ -164,11 +166,13 @@ func GetDomainSuffix(ctx context.Context, cliset *kubernetes.Clientset) (domainS
 
 	configMapCli := cliset.CoreV1().ConfigMaps(GetNamespace())
 
+	logrus.Infof("Setting domain suffix to %s", domainSuffix)
 	_, err = configMapCli.Patch(ctx, consts.KubeConfigMapNameNetworkConfig, types.MergePatchType, []byte(fmt.Sprintf(`{"data":{"%s":"%s"}}`, consts.NetworkConfigKeyDomainSuffix, domainSuffix)), metav1.PatchOptions{})
 	if err != nil {
 		err = errors.Wrapf(err, "failed to patch configmap %s", consts.KubeConfigMapNameNetworkConfig)
 		return
 	}
+	logrus.Infof("Domain suffix has been set to %s", domainSuffix)
 
 	return
 }

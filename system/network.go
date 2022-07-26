@@ -10,6 +10,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 
 	"github.com/bentoml/yatai-common/consts"
+	"github.com/bentoml/yatai-common/k8sutils"
 )
 
 func GetNetworkConfigConfigMap(ctx context.Context, cliset *kubernetes.Clientset) (configMap *corev1.ConfigMap, err error) {
@@ -21,10 +22,16 @@ func GetNetworkConfigConfigMap(ctx context.Context, cliset *kubernetes.Clientset
 		return
 	}
 	if isNotFound {
+		ns := GetNamespace()
+		err = k8sutils.MakesureNamespaceExists(ctx, cliset, ns)
+		if err != nil {
+			return
+		}
+
 		configMap, err = configMapCli.Create(ctx, &corev1.ConfigMap{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      consts.KubeConfigMapNameNetworkConfig,
-				Namespace: GetNamespace(),
+				Namespace: ns,
 			},
 			Data: map[string]string{},
 		}, metav1.CreateOptions{})
