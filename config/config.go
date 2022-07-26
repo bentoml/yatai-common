@@ -50,7 +50,10 @@ type S3Config struct {
 	Secure     bool   `yaml:"secure"`
 }
 
-func GetS3Config(ctx context.Context, cliset *kubernetes.Clientset, namespace, configMapName string) (conf *S3Config, err error) {
+func GetS3Config(ctx context.Context, cliset *kubernetes.Clientset) (conf *S3Config, err error) {
+	configMapName := consts.KubeConfigMapNameS3Config
+	namespace := consts.KubeNamespaceYataiSystem
+
 	conf = &S3Config{}
 	conf.Endpoint = os.Getenv(consts.EnvS3Endpoint)
 	conf.AccessKey = os.Getenv(consts.EnvS3AccessKey)
@@ -70,32 +73,35 @@ func GetS3Config(ctx context.Context, cliset *kubernetes.Clientset, namespace, c
 		return
 	}
 
-	if !isNotFound {
-		if conf.Endpoint == "" {
-			conf.Endpoint = string(configMap.Data[consts.KubeConfigMapKeyS3ConfigEndpoint])
-		}
-		if conf.AccessKey == "" {
-			conf.AccessKey, err = getValueFromSecret(ctx, cliset, configMap, consts.KubeConfigMapKeyS3ConfigAccessKeySecretName, consts.KubeConfigMapKeyS3ConfigAccessKeySecretKey)
-			if err != nil {
-				return
-			}
-		}
-		if conf.SecretKey == "" {
-			conf.SecretKey, err = getValueFromSecret(ctx, cliset, configMap, consts.KubeConfigMapKeyS3ConfigSecretKeySecretName, consts.KubeConfigMapKeyS3ConfigSecretKeySecretKey)
-			if err != nil {
-				return
-			}
-		}
-		if conf.Region == "" {
-			conf.Region = string(configMap.Data[consts.KubeConfigMapKeyS3ConfigRegion])
-		}
-		if conf.BucketName == "" {
-			conf.BucketName = string(configMap.Data[consts.KubeConfigMapKeyS3ConfigBucketName])
-		}
-		if !secureEnvExists {
-			conf.Secure = string(configMap.Data[consts.KubeConfigMapKeyS3ConfigSecure]) == "true"
+	if isNotFound {
+		return
+	}
+
+	if conf.Endpoint == "" {
+		conf.Endpoint = string(configMap.Data[consts.KubeConfigMapKeyS3ConfigEndpoint])
+	}
+	if conf.AccessKey == "" {
+		conf.AccessKey, err = getValueFromSecret(ctx, cliset, configMap, consts.KubeConfigMapKeyS3ConfigAccessKeySecretName, consts.KubeConfigMapKeyS3ConfigAccessKeySecretKey)
+		if err != nil {
+			return
 		}
 	}
+	if conf.SecretKey == "" {
+		conf.SecretKey, err = getValueFromSecret(ctx, cliset, configMap, consts.KubeConfigMapKeyS3ConfigSecretKeySecretName, consts.KubeConfigMapKeyS3ConfigSecretKeySecretKey)
+		if err != nil {
+			return
+		}
+	}
+	if conf.Region == "" {
+		conf.Region = string(configMap.Data[consts.KubeConfigMapKeyS3ConfigRegion])
+	}
+	if conf.BucketName == "" {
+		conf.BucketName = string(configMap.Data[consts.KubeConfigMapKeyS3ConfigBucketName])
+	}
+	if !secureEnvExists {
+		conf.Secure = string(configMap.Data[consts.KubeConfigMapKeyS3ConfigSecure]) == "true"
+	}
+
 	return
 }
 
@@ -108,7 +114,10 @@ type DockerRegistryConfig struct {
 	Secure              bool   `yaml:"secure"`
 }
 
-func GetDockerRegistryConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace, configMapName string) (conf *DockerRegistryConfig, err error) {
+func GetDockerRegistryConfig(ctx context.Context, cliset *kubernetes.Clientset) (conf *DockerRegistryConfig, err error) {
+	configMapName := consts.KubeConfigMapNameDockerRegistryConfig
+	namespace := consts.KubeNamespaceYataiDeploymentComponent
+
 	conf = &DockerRegistryConfig{}
 	conf.BentoRepositoryName = os.Getenv(consts.EnvDockerRegistryBentoRepositoryName)
 	conf.ModelRepositoryName = os.Getenv(consts.EnvDockerRegistryModelRepositoryName)
@@ -126,28 +135,30 @@ func GetDockerRegistryConfig(ctx context.Context, cliset *kubernetes.Clientset, 
 	if err != nil && !isNotFound {
 		err = errors.Wrapf(err, "failed to get config map %s in namespace %s", configMapName, namespace)
 	}
-	if !isNotFound {
-		if conf.BentoRepositoryName == "" {
-			conf.BentoRepositoryName = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigBentoRepositoryName])
+	if isNotFound {
+		return
+	}
+
+	if conf.BentoRepositoryName == "" {
+		conf.BentoRepositoryName = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigBentoRepositoryName])
+	}
+	if conf.ModelRepositoryName == "" {
+		conf.ModelRepositoryName = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigModelRepositoryName])
+	}
+	if conf.Server == "" {
+		conf.Server = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigServer])
+	}
+	if conf.Username == "" {
+		conf.Username = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigUsername])
+	}
+	if conf.Password == "" {
+		conf.Password, err = getValueFromSecret(ctx, cliset, configMap, consts.KubeConfigMapKeyDockerRegistryConfigPasswordSecretName, consts.KubeConfigMapKeyDockerRegistryConfigPasswordSecretKey)
+		if err != nil {
+			return
 		}
-		if conf.ModelRepositoryName == "" {
-			conf.ModelRepositoryName = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigModelRepositoryName])
-		}
-		if conf.Server == "" {
-			conf.Server = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigServer])
-		}
-		if conf.Username == "" {
-			conf.Username = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigUsername])
-		}
-		if conf.Password == "" {
-			conf.Password, err = getValueFromSecret(ctx, cliset, configMap, consts.KubeConfigMapKeyDockerRegistryConfigPasswordSecretName, consts.KubeConfigMapKeyDockerRegistryConfigPasswordSecretKey)
-			if err != nil {
-				return
-			}
-		}
-		if !secureEnvExists {
-			conf.Secure = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigSecure]) == "true"
-		}
+	}
+	if !secureEnvExists {
+		conf.Secure = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigSecure]) == "true"
 	}
 	return
 }
@@ -158,7 +169,10 @@ type YataiConfig struct {
 	ApiToken    string `yaml:"api_token"`
 }
 
-func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace, configMapName string, ignoreEnv bool) (conf *YataiConfig, err error) {
+func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, ignoreEnv bool) (conf *YataiConfig, err error) {
+	configMapName := consts.KubeConfigMapNameYataiConfig
+	namespace := consts.KubeNamespaceYataiDeploymentComponent
+
 	conf = &YataiConfig{}
 	if !ignoreEnv {
 		conf.Endpoint = os.Getenv(consts.EnvYataiEndpoint)
@@ -174,19 +188,55 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace
 		return
 	}
 
-	if !isNotFound {
-		if conf.Endpoint == "" {
-			conf.Endpoint = string(configMap.Data[consts.KubeConfigMapKeyYataiConfigEndpoint])
-		}
-		if conf.ClusterName == "" {
-			conf.ClusterName = string(configMap.Data[consts.KubeConfigMapKeyYataiConfigClusterName])
-		}
-		if conf.ApiToken == "" {
-			conf.ApiToken, err = getValueFromSecret(ctx, cliset, configMap, consts.KubeConfigMapKeyYataiConfigApiTokenSecretName, consts.KubeConfigMapKeyYataiConfigApiTokenSecretKey)
-			if err != nil {
-				return
-			}
+	if isNotFound {
+		return
+	}
+
+	if conf.Endpoint == "" {
+		conf.Endpoint = string(configMap.Data[consts.KubeConfigMapKeyYataiConfigEndpoint])
+	}
+	if conf.ClusterName == "" {
+		conf.ClusterName = string(configMap.Data[consts.KubeConfigMapKeyYataiConfigClusterName])
+	}
+	if conf.ApiToken == "" {
+		conf.ApiToken, err = getValueFromSecret(ctx, cliset, configMap, consts.KubeConfigMapKeyYataiConfigApiTokenSecretName, consts.KubeConfigMapKeyYataiConfigApiTokenSecretKey)
+		if err != nil {
+			return
 		}
 	}
+
+	return
+}
+
+type DockerImageBuilderConfig struct {
+	Privileged bool `yaml:"privileged"`
+}
+
+func GetDockerImageBuilderConfig(ctx context.Context, cliset *kubernetes.Clientset) (conf *DockerImageBuilderConfig, err error) {
+	configMapName := consts.KubeConfigMapNameDockerImageBuilderConfig
+	namespace := consts.KubeNamespaceYataiDeploymentComponent
+
+	conf = &DockerImageBuilderConfig{}
+	privileged, privilegedEnvExists := os.LookupEnv(consts.EnvDockerImageBuilderPrivileged)
+	if privilegedEnvExists {
+		conf.Privileged = privileged == "true"
+	}
+
+	configMapCli := cliset.CoreV1().ConfigMaps(namespace)
+	configMap, err := configMapCli.Get(ctx, configMapName, metav1.GetOptions{})
+	isNotFound := k8serrors.IsNotFound(err)
+	if err != nil && !isNotFound {
+		err = errors.Wrapf(err, "failed to get config map %s in namespace %s", configMapName, namespace)
+		return
+	}
+
+	if isNotFound {
+		return
+	}
+
+	if !privilegedEnvExists {
+		conf.Privileged = string(configMap.Data[consts.KubeConfigMapKeyDockerImageBuilderConfigPrivileged]) == "true"
+	}
+
 	return
 }

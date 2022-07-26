@@ -150,6 +150,10 @@ const (
 	KubeConfigMapKeyDockerRegistryConfigPasswordSecretKey   = "password-secret-key"
 	KubeConfigMapKeyDockerRegistryConfigSecure              = "secure"
 
+	KubeConfigMapNameDockerImageBuilderConfig = "docker-image-builder"
+
+	KubeConfigMapKeyDockerImageBuilderConfigPrivileged = "privileged"
+
 	KubeConfigMapNameYataiConfig = "yatai"
 
 	KubeConfigMapKeyYataiConfigEndpoint           = "endpoint"
