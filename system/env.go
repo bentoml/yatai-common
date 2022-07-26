@@ -2,6 +2,7 @@ package system
 
 import (
 	"os"
+	"sync"
 
 	"github.com/sirupsen/logrus"
 )
@@ -18,6 +19,10 @@ const (
 	DefaultMagicDNS  = "sslip.io"
 )
 
+var (
+	once sync.Once
+)
+
 // GetNamespace returns the name of the K8s namespace where our system components
 // run.
 func GetNamespace() string {
@@ -25,7 +30,9 @@ func GetNamespace() string {
 		return ns
 	}
 
-	logrus.Warnf("%s environment variable not set, using default namespace %s", NamespaceEnvKey, DefaultNamespace)
+	once.Do(func() {
+		logrus.Infof("%s environment variable not set, using default namespace %s", NamespaceEnvKey, DefaultNamespace)
+	})
 	return DefaultNamespace
 }
 
