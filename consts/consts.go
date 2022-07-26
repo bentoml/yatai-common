@@ -26,4 +26,7 @@ const (
 	AmazonS3Endpoint = "s3.amazonaws.com"
 
 	YataiApiTokenPrefixYataiDeploymentOperator = "yatai-deployment-operator"
+
+	// nolint: gosec
+	YataiK8sBotApiTokenName = "yatai-k8s-bot"
 )
