@@ -24,4 +24,6 @@ const (
 	NoneStr = "None"
 
 	AmazonS3Endpoint = "s3.amazonaws.com"
+
+	YataiApiTokenPrefixYataiDeploymentOperator = "yatai-deployment-operator"
 )
