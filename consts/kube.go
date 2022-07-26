@@ -25,6 +25,8 @@ const (
 	KubeNamespaceYataiOperators         = "yatai-operators"
 	KubeNamespaceYataiComponents        = "yatai-components"
 
+	KubeNamespaceYataiDeploymentComponent = "yatai-deployment"
+
 	KubeLabelMcdInfraCli               = "mcd-infra-cli"
 	KubeLabelMcdKubectl                = "mcd-kubectl"
 	KubeLabelMcdUser                   = "mcd-user"
