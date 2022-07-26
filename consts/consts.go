@@ -27,5 +27,4 @@ const (
 
 	NetworkConfigKeyDomainSuffix = "domain-suffix"
 	NetworkConfigKeyIngressClass = "ingress-class"
-	DefaultIngressClassName      = "nginx"
 )
