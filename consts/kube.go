@@ -145,6 +145,7 @@ const (
 	KubeConfigMapKeyDockerRegistryConfigBentoRepositoryName = "bento-repository-name"
 	KubeConfigMapKeyDockerRegistryConfigModelRepositoryName = "model-repository-name"
 	KubeConfigMapKeyDockerRegistryConfigServer              = "server"
+	KubeConfigMapKeyDockerRegistryConfigInClusterServer     = "in-cluster-server"
 	KubeConfigMapKeyDockerRegistryConfigUsername            = "username"
 	KubeConfigMapKeyDockerRegistryConfigPasswordSecretName  = "password-secret-name"
 	KubeConfigMapKeyDockerRegistryConfigPasswordSecretKey   = "password-secret-key"

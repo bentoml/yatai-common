@@ -109,6 +109,7 @@ type DockerRegistryConfig struct {
 	BentoRepositoryName string `yaml:"bento_repository_name"`
 	ModelRepositoryName string `yaml:"model_repository_name"`
 	Server              string `yaml:"server"`
+	InClusterServer     string `yaml:"in_cluster_server"`
 	Username            string `yaml:"username"`
 	Password            string `yaml:"password"`
 	Secure              bool   `yaml:"secure"`
@@ -122,6 +123,7 @@ func GetDockerRegistryConfig(ctx context.Context, cliset *kubernetes.Clientset) 
 	conf.BentoRepositoryName = os.Getenv(consts.EnvDockerRegistryBentoRepositoryName)
 	conf.ModelRepositoryName = os.Getenv(consts.EnvDockerRegistryModelRepositoryName)
 	conf.Server = os.Getenv(consts.EnvDockerRegistryServer)
+	conf.InClusterServer = os.Getenv(consts.EnvDockerRegistryInClusterServer)
 	conf.Username = os.Getenv(consts.EnvDockerRegistryUsername)
 	conf.Password = os.Getenv(consts.EnvDockerRegistryPassword)
 	secure, secureEnvExists := os.LookupEnv(consts.EnvDockerRegistrySecure)
@@ -147,6 +149,9 @@ func GetDockerRegistryConfig(ctx context.Context, cliset *kubernetes.Clientset) 
 	}
 	if conf.Server == "" {
 		conf.Server = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigServer])
+	}
+	if conf.InClusterServer == "" {
+		conf.InClusterServer = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigInClusterServer])
 	}
 	if conf.Username == "" {
 		conf.Username = string(configMap.Data[consts.KubeConfigMapKeyDockerRegistryConfigUsername])

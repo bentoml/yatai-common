@@ -25,8 +25,9 @@ const (
 	EnvS3SecretKey = "S3_SECRET_KEY"
 	EnvS3Secure    = "S3_SECURE"
 
-	EnvDockerRegistryServer   = "DOCKER_REGISTRY_SERVER"
-	EnvDockerRegistryUsername = "DOCKER_REGISTRY_USERNAME"
+	EnvDockerRegistryServer          = "DOCKER_REGISTRY_SERVER"
+	EnvDockerRegistryInClusterServer = "DOCKER_REGISTRY_IN_CLUSTER_SERVER"
+	EnvDockerRegistryUsername        = "DOCKER_REGISTRY_USERNAME"
 	// nolint:gosec
 	EnvDockerRegistryPassword            = "DOCKER_REGISTRY_PASSWORD"
 	EnvDockerRegistrySecure              = "DOCKER_REGISTRY_SECURE"
