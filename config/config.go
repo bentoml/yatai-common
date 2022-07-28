@@ -33,7 +33,7 @@ func GetS3Config(ctx context.Context) (conf *S3Config, err error) {
 	conf.Secure = os.Getenv(consts.EnvS3Secure) == "true"
 
 	if conf.Endpoint == "" {
-		err = errors.Errorf("the environment variable %s is not set", consts.EnvS3Endpoint)
+		err = errors.Wrapf(consts.ErrNotFound, "the environment variable %s is not set", consts.EnvS3Endpoint)
 	}
 
 	return
@@ -60,7 +60,7 @@ func GetDockerRegistryConfig(ctx context.Context) (conf *DockerRegistryConfig, e
 	conf.Secure = os.Getenv(consts.EnvDockerRegistrySecure) == "true"
 
 	if conf.Server == "" {
-		err = errors.Errorf("the environment variable %s is not set", consts.EnvDockerRegistryServer)
+		err = errors.Wrapf(consts.ErrNotFound, "the environment variable %s is not set", consts.EnvDockerRegistryServer)
 	}
 
 	return
