@@ -14,33 +14,6 @@ import (
 	"github.com/bentoml/yatai-common/consts"
 )
 
-func getValueFromSecret(ctx context.Context, cliset *kubernetes.Clientset, configMap *corev1.ConfigMap, configMapKeySecretName, configMapKeySecretKey string) (value string, err error) {
-	secretName := string(configMap.Data[configMapKeySecretName])
-	if secretName == "" {
-		err = errors.Errorf("the config map %s in namespace %s does not contain key %s", configMap.Name, configMap.Namespace, configMapKeySecretName)
-		return
-	}
-	secretKey := string(configMap.Data[configMapKeySecretKey])
-	if secretKey == "" {
-		err = errors.Errorf("the config map %s in namespace %s does not contain key %s", configMap.Name, configMap.Namespace, configMapKeySecretKey)
-		return
-	}
-	secret, err := cliset.CoreV1().Secrets(configMap.Namespace).Get(ctx, secretName, metav1.GetOptions{})
-	if err != nil {
-		err = errors.Wrapf(err, "failed to get secret %s in namespace %s", secretName, configMap.Namespace)
-		return
-	}
-	valueRaw := string(secret.Data[secretKey])
-	var value_ []byte
-	value_, err = base64.StdEncoding.DecodeString(valueRaw)
-	if err != nil {
-		err = errors.Wrapf(err, "failed to decode the field %s from secret %s in namespace %s", secretKey, secretName, configMap.Namespace)
-		return
-	}
-	value = string(value_)
-	return
-}
-
 type S3Config struct {
 	Endpoint   string `yaml:"endpoint"`
 	AccessKey  string `yaml:"access_key"`
@@ -99,10 +72,7 @@ type YataiConfig struct {
 	ApiToken    string `yaml:"api_token"`
 }
 
-func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, ignoreEnv bool) (conf *YataiConfig, err error) {
-	configMapName := consts.KubeConfigMapNameYataiConfig
-	namespace := consts.KubeNamespaceYataiDeploymentComponent
-
+func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace string, ignoreEnv bool) (conf *YataiConfig, err error) {
 	conf = &YataiConfig{}
 	if !ignoreEnv {
 		conf.Endpoint = os.Getenv(consts.EnvYataiEndpoint)
@@ -110,29 +80,26 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, ignoreEnv
 		conf.ApiToken = os.Getenv(consts.EnvYataiApiToken)
 	}
 
-	configMapCli := cliset.CoreV1().ConfigMaps(namespace)
-	configMap, err := configMapCli.Get(ctx, configMapName, metav1.GetOptions{})
-	isNotFound := k8serrors.IsNotFound(err)
-	if err != nil && !isNotFound {
-		err = errors.Wrapf(err, "failed to get config map %s in namespace %s", configMapName, namespace)
-		return
-	}
-
-	if isNotFound {
-		return
-	}
-
-	if conf.Endpoint == "" {
-		conf.Endpoint = string(configMap.Data[consts.KubeConfigMapKeyYataiConfigEndpoint])
-	}
-	if conf.ClusterName == "" {
-		conf.ClusterName = string(configMap.Data[consts.KubeConfigMapKeyYataiConfigClusterName])
-	}
 	if conf.ApiToken == "" {
-		conf.ApiToken, err = getValueFromSecret(ctx, cliset, configMap, consts.KubeConfigMapKeyYataiConfigApiTokenSecretName, consts.KubeConfigMapKeyYataiConfigApiTokenSecretKey)
+		secretName := "yatai"
+		var secret *corev1.Secret
+		secret, err = cliset.CoreV1().Secrets(namespace).Get(ctx, secretName, metav1.GetOptions{})
 		if err != nil {
+			if k8serrors.IsNotFound(err) {
+				err = errors.Errorf("the secret %s in namespace %s does not exist", secretName, namespace)
+			} else {
+				err = errors.Wrapf(err, "failed to get secret %s in namespace %s", secretName, namespace)
+			}
 			return
 		}
+		apiTokenRaw := string(secret.Data["api-token"])
+		var apiToken_ []byte
+		apiToken_, err = base64.StdEncoding.DecodeString(apiTokenRaw)
+		if err != nil {
+			err = errors.Wrapf(err, "failed to decode the field api-token from secret %s in namespace %s", secretName, namespace)
+			return
+		}
+		conf.ApiToken = string(apiToken_)
 	}
 
 	return
