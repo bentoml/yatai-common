@@ -92,7 +92,7 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace
 			}
 			return
 		}
-		apiTokenRaw := string(secret.Data["api-token"])
+		apiTokenRaw := string(secret.Data[consts.EnvYataiApiToken])
 		var apiToken_ []byte
 		apiToken_, err = base64.StdEncoding.DecodeString(apiTokenRaw)
 		if err != nil {
