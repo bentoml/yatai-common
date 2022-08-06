@@ -81,7 +81,7 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace
 	}
 
 	if conf.ApiToken == "" {
-		secretName := "config"
+		secretName := "env"
 		var secret *corev1.Secret
 		secret, err = cliset.CoreV1().Secrets(namespace).Get(ctx, secretName, metav1.GetOptions{})
 		if err != nil {
