@@ -28,31 +28,6 @@ func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ing
 	}
 
 	ingressClassName = strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressClass])
-	if ingressClassName != "" {
-		return
-	}
-
-	ingressClassList, err := cliset.NetworkingV1().IngressClasses().List(ctx, metav1.ListOptions{})
-	if err != nil {
-		err = errors.Wrapf(err, "failed to list ingress classes")
-		return
-	}
-
-	if len(ingressClassList.Items) == 0 {
-		err = errors.New("no ingress class found")
-		return
-	}
-
-	ingressClassName = ingressClassList.Items[0].Name
-
-	logrus.Infof("you have not set the %s in the network config, so select the first existing ingressclass `%s` in your cluster, and set it to the network config", consts.KubeConfigMapKeyNetworkConfigIngressClass, ingressClassName)
-
-	configMapCli := cliset.CoreV1().ConfigMaps(configMap.Namespace)
-	_, err = configMapCli.Patch(ctx, configMap.Name, types.StrategicMergePatchType, []byte(fmt.Sprintf(`{"data":{"%s":"%s"}}`, consts.KubeConfigMapKeyNetworkConfigIngressClass, ingressClassName)), metav1.PatchOptions{})
-	if err != nil {
-		err = errors.Wrapf(err, "failed to patch configmap %s", consts.KubeConfigMapNameNetworkConfig)
-		return
-	}
 
 	return
 }
