@@ -20,27 +20,26 @@ import (
 	"github.com/bentoml/yatai-common/utils"
 )
 
-func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ingressClassName string, err error) {
+func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ingressClassName *string, err error) {
 	configMap, err := GetNetworkConfigConfigMap(ctx, cliset)
 	if err != nil {
 		err = errors.Wrapf(err, "failed to get configmap %s", consts.KubeConfigMapNameNetworkConfig)
 		return
 	}
 
-	ingressClassName = strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressClass])
+	ingressClassName_ := strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressClass])
+
+	if ingressClassName_ != "" {
+		ingressClassName = &ingressClassName_
+	}
 
 	return
 }
 
 func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string, err error) {
-	ingressClassName_, err := GetIngressClassName(ctx, cliset)
+	ingressClassName, err := GetIngressClassName(ctx, cliset)
 	if err != nil {
 		return
-	}
-
-	var ingressClassName *string
-	if ingressClassName_ != "" {
-		ingressClassName = &ingressClassName_
 	}
 
 	ingressCli := cliset.NetworkingV1().Ingresses(GetNamespace())
