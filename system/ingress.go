@@ -33,9 +33,14 @@ func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ing
 }
 
 func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string, err error) {
-	ingressClassName, err := GetIngressClassName(ctx, cliset)
+	ingressClassName_, err := GetIngressClassName(ctx, cliset)
 	if err != nil {
 		return
+	}
+
+	var ingressClassName *string
+	if ingressClassName_ != "" {
+		ingressClassName = &ingressClassName_
 	}
 
 	ingressCli := cliset.NetworkingV1().Ingresses(GetNamespace())
@@ -56,7 +61,7 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 			Namespace:    GetNamespace(),
 		},
 		Spec: networkingv1.IngressSpec{
-			IngressClassName: &ingressClassName,
+			IngressClassName: ingressClassName,
 			Rules: []networkingv1.IngressRule{{
 				Host: fmt.Sprintf("%s.default-domain.invalid", podName),
 				IngressRuleValue: networkingv1.IngressRuleValue{

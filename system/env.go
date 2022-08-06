@@ -14,7 +14,7 @@ const (
 	// label.
 	ResourceLabelEnvKey = "SYSTEM_RESOURCE_LABEL"
 
-	DefaultNamespace = "yatai-system"
+	DefaultNamespace = "yatai-deployment"
 	MagicDNSEnvKey   = "MAGIC_DNS"
 	DefaultMagicDNS  = "sslip.io"
 )
