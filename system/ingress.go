@@ -2,6 +2,7 @@ package system
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net"
 	"os"
@@ -20,6 +21,30 @@ import (
 
 	"github.com/bentoml/yatai-common/consts"
 )
+
+func GetIngressAnnotations(ctx context.Context, cliset *kubernetes.Clientset) (annotations map[string]string, err error) {
+	configMap, err := GetNetworkConfigConfigMap(ctx, cliset)
+	if err != nil {
+		err = errors.Wrapf(err, "failed to get configmap %s", consts.KubeConfigMapNameNetworkConfig)
+		return
+	}
+
+	annotations = make(map[string]string)
+
+	annotationsStr := strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressAnnotations])
+
+	if annotationsStr == "" {
+		return
+	}
+
+	err = json.Unmarshal([]byte(annotationsStr), &annotations)
+	if err != nil {
+		err = errors.Wrapf(err, "failed to json unmarshal %s in configmap %s: %s", consts.KubeConfigMapKeyNetworkConfigIngressAnnotations, consts.KubeConfigMapNameNetworkConfig, annotationsStr)
+		return
+	}
+
+	return
+}
 
 func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ingressClassName *string, err error) {
 	configMap, err := GetNetworkConfigConfigMap(ctx, cliset)

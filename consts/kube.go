@@ -87,8 +87,9 @@ const (
 
 	KubeConfigMapNameNetworkConfig = "network"
 
-	KubeConfigMapKeyNetworkConfigDomainSuffix = "domain-suffix"
-	KubeConfigMapKeyNetworkConfigIngressClass = "ingress-class"
+	KubeConfigMapKeyNetworkConfigDomainSuffix       = "domain-suffix"
+	KubeConfigMapKeyNetworkConfigIngressClass       = "ingress-class"
+	KubeConfigMapKeyNetworkConfigIngressAnnotations = "ingress-annotations"
 
 	KubeConfigMapNameYataiConfig = "yatai"
 
