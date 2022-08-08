@@ -68,6 +68,11 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 		return
 	}
 
+	ingressAnnotations, err := GetIngressAnnotations(ctx, cliset)
+	if err != nil {
+		return
+	}
+
 	ingressCli := cliset.NetworkingV1().Ingresses(GetNamespace())
 
 	ingName := "default-domain-"
@@ -85,6 +90,7 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 		ObjectMeta: metav1.ObjectMeta{
 			GenerateName: ingName,
 			Namespace:    GetNamespace(),
+			Annotations:  ingressAnnotations,
 		},
 		Spec: networkingv1.IngressSpec{
 			IngressClassName: ingressClassName,
