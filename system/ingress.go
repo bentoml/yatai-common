@@ -9,15 +9,16 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"
 	networkingv1 "k8s.io/api/networking/v1"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/kubernetes"
 
 	"github.com/bentoml/yatai-common/consts"
-	"github.com/bentoml/yatai-common/utils"
 )
 
 func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ingressClassName *string, err error) {
@@ -50,7 +51,8 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 	podName := os.Getenv("POD_NAME")
 	if podName == "" {
 		// random string
-		podName = strings.ToLower(utils.RandString(10))
+		guid := xid.New()
+		podName = fmt.Sprintf("a%s", strings.ToLower(guid.String()))
 	}
 
 	logrus.Infof("Creating ingress %s to get a ingress IP automatically", ingName)
@@ -62,7 +64,7 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 		Spec: networkingv1.IngressSpec{
 			IngressClassName: ingressClassName,
 			Rules: []networkingv1.IngressRule{{
-				Host: fmt.Sprintf("%s.default-domain.invalid", podName),
+				Host: fmt.Sprintf("%s.this-is-yatai-in-order-to-generate-the-default-domain-suffix.yeah", podName),
 				IngressRuleValue: networkingv1.IngressRuleValue{
 					HTTP: &networkingv1.HTTPIngressRuleValue{
 						Paths: []networkingv1.HTTPIngressPath{
@@ -84,7 +86,7 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 			}},
 		},
 	}, metav1.CreateOptions{})
-	if err != nil {
+	if err != nil && !k8serrors.IsAlreadyExists(err) {
 		err = errors.Wrapf(err, "failed to create ingress %s", ingName)
 		return
 	}

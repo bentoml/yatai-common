@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/panjf2000/ants/v2 v2.4.8
 	github.com/pkg/errors v0.9.1
+	github.com/rs/xid v1.4.0
 	github.com/sirupsen/logrus v1.8.1
 	k8s.io/api v0.24.0-beta.0
 	k8s.io/apimachinery v0.24.0-beta.0
