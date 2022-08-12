@@ -2,7 +2,6 @@ package config
 
 import (
 	"context"
-	"encoding/base64"
 	"os"
 
 	"github.com/pkg/errors"
@@ -92,14 +91,7 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace
 			}
 			return
 		}
-		apiTokenRaw := string(secret.Data[consts.EnvYataiApiToken])
-		var apiToken_ []byte
-		apiToken_, err = base64.StdEncoding.DecodeString(apiTokenRaw)
-		if err != nil {
-			err = errors.Wrapf(err, "failed to decode the field api-token from secret %s in namespace %s", secretName, namespace)
-			return
-		}
-		conf.ApiToken = string(apiToken_)
+		conf.ApiToken = string(secret.Data[consts.EnvYataiApiToken])
 	}
 
 	return
