@@ -19,6 +19,8 @@ const (
 	// nolint: gosec
 	YataiApiTokenHeaderName = "X-YATAI-API-TOKEN"
 
+	YataiOrganizationHeaderName = "X-YATAI-ORGANIZATION"
+
 	BentoServicePort = 3000
 
 	NoneStr = "None"
