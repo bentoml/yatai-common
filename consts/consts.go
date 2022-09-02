@@ -21,7 +21,10 @@ const (
 
 	YataiOrganizationHeaderName = "X-Yatai-Organization"
 
-	BentoServicePort = 3000
+	BentoServicePort          = 3000
+	BentoContainerDefaultPort = 3000
+	BentoServicePortName      = "http"
+	BentoContainerPortName    = "http"
 
 	NoneStr = "None"
 
