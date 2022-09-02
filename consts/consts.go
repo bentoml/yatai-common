@@ -34,4 +34,7 @@ const (
 
 	// nolint: gosec
 	YataiK8sBotApiTokenName = "yatai-k8s-bot"
+
+	YataiBentoDeploymentComponentApiServer = "api-server"
+	YataiBentoDeploymentComponentRunner    = "runner"
 )

@@ -27,16 +27,13 @@ const (
 	KubeNamespaceYataiSystem              = "yatai-system"
 	KubeNamespaceYataiDeploymentComponent = "yatai-deployment"
 
-	KubeLabelYataiDeployment                        = "yatai.ai/deployment"
-	KubeLabelYataiDeploymentComponent               = "yatai.ai/deployment-component"
-	KubeLabelValueYataiDeploymentComponentApiServer = "api-server"
-	KubeLabelValueYataiDeploymentComponentRunner    = "runner"
-	KubeLabelYataiDeploymentId                      = "yatai.ai/deployment-id"
-	KubeLabelYataiDeploymentTargetType              = "yatai.ai/deployment-target-type"
-	KubeLabelYataiBentoRunner                       = "yatai.ai/bento-runner"
-	KubeLabelBentoRepository                        = "yatai.ai/bento-repository"
-	KubeLabelBentoVersion                           = "yatai.ai/bento-version"
-	KubeLabelCreator                                = "creator"
+	KubeLabelYataiBentoDeployment           = "yatai.ai/bento-deployment"
+	KubeLabelYataiBentoDeploymentComponent  = "yatai.ai/bento-deployment-component"
+	KubeLabelYataiBentoDeploymentTargetType = "yatai.ai/bento-deployment-target-type"
+	KubeLabelYataiBentoDeploymentRunner     = "yatai.ai/bento-deployment-runner"
+	KubeLabelBentoRepository                = "yatai.ai/bento-repository"
+	KubeLabelBentoVersion                   = "yatai.ai/bento-version"
+	KubeLabelCreator                        = "creator"
 	// nolint: gosec
 	KubeLabelYataiDeployToken = "yatai.ai/deploy-token"
 
