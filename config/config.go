@@ -96,14 +96,3 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace
 
 	return
 }
-
-type DockerImageBuilderConfig struct {
-	Privileged bool `yaml:"privileged"`
-}
-
-func GetDockerImageBuilderConfig() (conf *DockerImageBuilderConfig) {
-	conf = &DockerImageBuilderConfig{}
-	conf.Privileged = os.Getenv(consts.EnvDockerImageBuilderPrivileged) == "true"
-
-	return
-}
