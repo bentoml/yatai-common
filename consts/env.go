@@ -33,4 +33,8 @@ const (
 	EnvDockerRegistrySecure              = "DOCKER_REGISTRY_SECURE"
 	EnvDockerRegistryBentoRepositoryName = "DOCKER_REGISTRY_BENTO_REPOSITORY_NAME"
 	EnvDockerRegistryModelRepositoryName = "DOCKER_REGISTRY_MODEL_REPOSITORY_NAME"
+
+	InternalImagesCurl               = "INTERNAL_IMAGES_CURL"
+	InternalImagesKaniko             = "INTERNAL_IMAGES_KANIKO"
+	InternalImagesMetricsTransformer = "INTERNAL_IMAGES_METRICS_TRANSFORMER"
 )
