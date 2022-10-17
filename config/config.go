@@ -96,3 +96,18 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace
 
 	return
 }
+
+type InternalImages struct {
+	Curl               string `yaml:"curl"`
+	Kaniko             string `yaml:"kaniko"`
+	MetricsTransformer string `yaml:"metrics-transformer"`
+}
+
+func GetInternalImages() (conf *InternalImages) {
+	conf = &InternalImages{}
+	conf.Curl = os.Getenv(consts.InternalImagesCurl)
+	conf.Kaniko = os.Getenv(consts.InternalImagesKaniko)
+	conf.MetricsTransformer = os.Getenv(consts.InternalImagesMetricsTransformer)
+
+	return
+}
