@@ -37,4 +37,8 @@ const (
 	InternalImagesCurl               = "INTERNAL_IMAGES_CURL"
 	InternalImagesKaniko             = "INTERNAL_IMAGES_KANIKO"
 	InternalImagesMetricsTransformer = "INTERNAL_IMAGES_METRICS_TRANSFORMER"
+
+	InternalImagesCurlDefault               = "quay.io/bentoml/curl"
+	InternalImagesKanikoDefault             = "quay.io/bentoml/kaniko"
+	InternalImagesMetricsTransformerDefault = "quay.io/bentoml/yatai-bento-metrics-transformer"
 )
