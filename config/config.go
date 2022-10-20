@@ -97,6 +97,14 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace
 	return
 }
 
+// if key found in environ return value else return fallback
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
 type InternalImages struct {
 	Curl               string `yaml:"curl"`
 	Kaniko             string `yaml:"kaniko"`
@@ -105,9 +113,9 @@ type InternalImages struct {
 
 func GetInternalImages() (conf *InternalImages) {
 	conf = &InternalImages{}
-	conf.Curl = os.Getenv(consts.InternalImagesCurl)
-	conf.Kaniko = os.Getenv(consts.InternalImagesKaniko)
-	conf.MetricsTransformer = os.Getenv(consts.InternalImagesMetricsTransformer)
+	conf.Curl = getEnv(consts.InternalImagesCurl, consts.InternalImagesCurlDefault)
+	conf.Kaniko = getEnv(consts.InternalImagesKaniko, consts.InternalImagesKanikoDefault)
+	conf.MetricsTransformer = getEnv(consts.InternalImagesMetricsTransformer, consts.InternalImagesMetricsTransformerDefault)
 
 	return
 }
