@@ -203,13 +203,15 @@ type YataiConfig struct {
 	ApiToken    string `yaml:"api_token"`
 }
 
-func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, yataiSystemNamespace, secretName string, ignoreEnv bool) (conf *YataiConfig, err error) {
+func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, secretName string, ignoreEnv bool) (conf *YataiConfig, err error) {
 	conf = &YataiConfig{}
 	if !ignoreEnv {
 		conf.Endpoint = os.Getenv(consts.EnvYataiEndpoint)
 		conf.ClusterName = os.Getenv(consts.EnvYataiClusterName)
 		conf.ApiToken = os.Getenv(consts.EnvYataiApiToken)
 	}
+
+	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
 
 	if conf.Endpoint == "" {
 		var secret *corev1.Secret
