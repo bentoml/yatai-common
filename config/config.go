@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"os"
+	"strings"
 
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
@@ -12,6 +13,114 @@ import (
 
 	"github.com/bentoml/yatai-common/consts"
 )
+
+func GetYataiSystemNamespaceFromEnv() (namespace string) {
+	namespace = os.Getenv(consts.EnvYataiSystemNamespace)
+	if namespace == "" {
+		namespace = consts.DefaultKubeNamespaceYataiSystem
+	}
+
+	return
+}
+
+func GetYataiImageBuilderNamespace(ctx context.Context, cliset *kubernetes.Clientset) (namespace string, err error) {
+	namespace = os.Getenv(consts.EnvYataiImageBuilderNamespace)
+	if namespace != "" {
+		return
+	}
+
+	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+
+	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiImageBuilderSharedEnv, metav1.GetOptions{})
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiImageBuilderSharedEnv, yataiSystemNamespace)
+		}
+		return
+	}
+
+	namespace = string(secret.Data[consts.EnvYataiImageBuilderNamespace])
+	if namespace == "" {
+		namespace = consts.DefaultKubeNamespaceYataiImageBuilderComponent
+	}
+
+	return
+}
+
+func GetYataiDeploymentNamespace(ctx context.Context, cliset *kubernetes.Clientset) (namespace string, err error) {
+	namespace = os.Getenv(consts.EnvYataiDeploymentNamespace)
+	if namespace != "" {
+		return
+	}
+
+	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+
+	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiDeploymentSharedEnv, metav1.GetOptions{})
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiDeploymentSharedEnv, yataiSystemNamespace)
+		}
+		return
+	}
+
+	namespace = string(secret.Data[consts.EnvYataiDeploymentNamespace])
+	if namespace == "" {
+		namespace = consts.DefaultKubeNamespaceYataiDeploymentComponent
+	}
+
+	return
+}
+
+func GetImageBuildersNamespace(ctx context.Context, cliset *kubernetes.Clientset) (namespace string, err error) {
+	namespace = os.Getenv(consts.EnvImageBuildersNamespace)
+	if namespace != "" {
+		return
+	}
+
+	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+
+	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiImageBuilderSharedEnv, metav1.GetOptions{})
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiImageBuilderSharedEnv, yataiSystemNamespace)
+		}
+		return
+	}
+
+	namespace = string(secret.Data[consts.EnvImageBuildersNamespace])
+	if namespace == "" {
+		namespace = consts.DefaultKubeNamespaceImageBuilders
+	}
+
+	return
+}
+
+func GetBentoDeploymentNamespaces(ctx context.Context, cliset *kubernetes.Clientset) (namespaces []string, err error) {
+	namespaces_ := os.Getenv(consts.EnvBentoDeploymentNamespaces)
+	if namespaces_ != "" {
+		namespaces = strings.Split(namespaces_, ",")
+		return
+	}
+
+	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+
+	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiDeploymentSharedEnv, metav1.GetOptions{})
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiDeploymentSharedEnv, yataiSystemNamespace)
+		}
+		return
+	}
+
+	namespaces_ = string(secret.Data[consts.EnvBentoDeploymentNamespaces])
+	if namespaces_ == "" {
+		namespaces = []string{consts.DefaultKubeNamespaceBentoDeployment}
+	} else {
+		namespaces = strings.Split(namespaces_, ",")
+	}
+
+	return
+}
 
 type S3Config struct {
 	Endpoint   string `yaml:"endpoint"`
@@ -48,7 +157,7 @@ type DockerRegistryConfig struct {
 	Secure              bool   `yaml:"secure"`
 }
 
-func GetDockerRegistryConfig(ctx context.Context) (conf *DockerRegistryConfig, err error) {
+func GetDockerRegistryConfig(ctx context.Context, cliset *kubernetes.Clientset) (conf *DockerRegistryConfig, err error) {
 	conf = &DockerRegistryConfig{}
 	conf.BentoRepositoryName = os.Getenv(consts.EnvDockerRegistryBentoRepositoryName)
 	conf.ModelRepositoryName = os.Getenv(consts.EnvDockerRegistryModelRepositoryName)
@@ -57,6 +166,29 @@ func GetDockerRegistryConfig(ctx context.Context) (conf *DockerRegistryConfig, e
 	conf.Username = os.Getenv(consts.EnvDockerRegistryUsername)
 	conf.Password = os.Getenv(consts.EnvDockerRegistryPassword)
 	conf.Secure = os.Getenv(consts.EnvDockerRegistrySecure) == "true"
+
+	if conf.Server == "" {
+		yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+
+		var secret *corev1.Secret
+
+		secret, err = cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiImageBuilderSharedEnv, metav1.GetOptions{})
+		if err != nil {
+			if k8serrors.IsNotFound(err) {
+				err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiImageBuilderSharedEnv, yataiSystemNamespace)
+			}
+			return
+		}
+
+		conf.BentoRepositoryName = string(secret.Data[consts.EnvDockerRegistryBentoRepositoryName])
+		conf.ModelRepositoryName = string(secret.Data[consts.EnvDockerRegistryModelRepositoryName])
+		conf.Server = string(secret.Data[consts.EnvDockerRegistryServer])
+		conf.InClusterServer = string(secret.Data[consts.EnvDockerRegistryInClusterServer])
+		conf.Username = string(secret.Data[consts.EnvDockerRegistryUsername])
+		conf.Password = string(secret.Data[consts.EnvDockerRegistryPassword])
+		conf.Secure = string(secret.Data[consts.EnvDockerRegistrySecure]) == "true"
+
+	}
 
 	if conf.Server == "" {
 		err = errors.Wrapf(consts.ErrNotFound, "the environment variable %s is not set", consts.EnvDockerRegistryServer)
@@ -71,7 +203,7 @@ type YataiConfig struct {
 	ApiToken    string `yaml:"api_token"`
 }
 
-func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace string, ignoreEnv bool) (conf *YataiConfig, err error) {
+func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, yataiSystemNamespace, secretName string, ignoreEnv bool) (conf *YataiConfig, err error) {
 	conf = &YataiConfig{}
 	if !ignoreEnv {
 		conf.Endpoint = os.Getenv(consts.EnvYataiEndpoint)
@@ -79,15 +211,28 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, namespace
 		conf.ApiToken = os.Getenv(consts.EnvYataiApiToken)
 	}
 
-	if conf.ApiToken == "" {
-		secretName := "env"
+	if conf.Endpoint == "" {
 		var secret *corev1.Secret
-		secret, err = cliset.CoreV1().Secrets(namespace).Get(ctx, secretName, metav1.GetOptions{})
+		secret, err = cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiCommonEnv, metav1.GetOptions{})
 		if err != nil {
 			if k8serrors.IsNotFound(err) {
-				err = errors.Errorf("the secret %s in namespace %s does not exist", secretName, namespace)
+				err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiCommonEnv, yataiSystemNamespace)
+			}
+			return
+		}
+		conf.Endpoint = string(secret.Data[consts.EnvYataiEndpoint])
+		conf.ClusterName = string(secret.Data[consts.EnvYataiClusterName])
+		conf.ApiToken = string(secret.Data[consts.EnvYataiApiToken])
+	}
+
+	if conf.ApiToken == "" {
+		var secret *corev1.Secret
+		secret, err = cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, secretName, metav1.GetOptions{})
+		if err != nil {
+			if k8serrors.IsNotFound(err) {
+				err = errors.Errorf("the secret %s in namespace %s does not exist", secretName, yataiSystemNamespace)
 			} else {
-				err = errors.Wrapf(err, "failed to get secret %s in namespace %s", secretName, namespace)
+				err = errors.Wrapf(err, "failed to get secret %s in namespace %s", secretName, yataiSystemNamespace)
 			}
 			return
 		}
@@ -113,9 +258,9 @@ type InternalImages struct {
 
 func GetInternalImages() (conf *InternalImages) {
 	conf = &InternalImages{}
-	conf.Curl = getEnv(consts.InternalImagesCurl, consts.InternalImagesCurlDefault)
-	conf.Kaniko = getEnv(consts.InternalImagesKaniko, consts.InternalImagesKanikoDefault)
-	conf.MetricsTransformer = getEnv(consts.InternalImagesMetricsTransformer, consts.InternalImagesMetricsTransformerDefault)
+	conf.Curl = getEnv(consts.EnvInternalImagesCurl, consts.InternalImagesCurlDefault)
+	conf.Kaniko = getEnv(consts.EnvInternalImagesKaniko, consts.InternalImagesKanikoDefault)
+	conf.MetricsTransformer = getEnv(consts.EnvInternalImagesMetricsTransformer, consts.InternalImagesMetricsTransformerDefault)
 
 	return
 }

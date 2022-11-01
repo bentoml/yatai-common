@@ -1,7 +1,6 @@
 package consts
 
 const (
-	DefaultNewsURL                         = "https://raw.githubusercontent.com/bentoml/yatai-homepage-news/main/news.json"
 	DefaultETCDTimeoutSeconds              = 5
 	DefaultETCDDialKeepaliveTimeSeconds    = 30
 	DefaultETCDDialKeepaliveTimeoutSeconds = 10
@@ -30,11 +29,16 @@ const (
 
 	AmazonS3Endpoint = "s3.amazonaws.com"
 
-	YataiApiTokenPrefixYataiDeploymentOperator = "yatai-deployment-operator"
+	YataiImageBuilderComponentName = "yatai-image-builder"
+	YataiDeploymentComponentName   = "yatai-deployment"
 
 	// nolint: gosec
 	YataiK8sBotApiTokenName = "yatai-k8s-bot"
 
 	YataiBentoDeploymentComponentApiServer = "api-server"
 	YataiBentoDeploymentComponentRunner    = "runner"
+
+	InternalImagesCurlDefault               = "quay.io/bentoml/curl:0.0.1"
+	InternalImagesKanikoDefault             = "quay.io/bentoml/kaniko:1.9.1"
+	InternalImagesMetricsTransformerDefault = "quay.io/bentoml/yatai-bento-metrics-transformer:0.0.2"
 )
