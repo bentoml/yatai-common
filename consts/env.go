@@ -34,11 +34,13 @@ const (
 	EnvDockerRegistryBentoRepositoryName = "DOCKER_REGISTRY_BENTO_REPOSITORY_NAME"
 	EnvDockerRegistryModelRepositoryName = "DOCKER_REGISTRY_MODEL_REPOSITORY_NAME"
 
-	InternalImagesCurl               = "INTERNAL_IMAGES_CURL"
-	InternalImagesKaniko             = "INTERNAL_IMAGES_KANIKO"
-	InternalImagesMetricsTransformer = "INTERNAL_IMAGES_METRICS_TRANSFORMER"
+	EnvInternalImagesCurl               = "INTERNAL_IMAGES_CURL"
+	EnvInternalImagesKaniko             = "INTERNAL_IMAGES_KANIKO"
+	EnvInternalImagesMetricsTransformer = "INTERNAL_IMAGES_METRICS_TRANSFORMER"
 
-	InternalImagesCurlDefault               = "quay.io/bentoml/curl:0.0.1"
-	InternalImagesKanikoDefault             = "quay.io/bentoml/kaniko:1.9.1"
-	InternalImagesMetricsTransformerDefault = "quay.io/bentoml/yatai-bento-metrics-transformer:0.0.2"
+	EnvYataiSystemNamespace       = "YATAI_SYSTEM_NAMESPACE"
+	EnvYataiImageBuilderNamespace = "YATAI_IMAGE_BUILDER_NAMESPACE"
+	EnvYataiDeploymentNamespace   = "YATAI_DEPLOYMENT_NAMESPACE"
+	EnvBentoDeploymentNamespaces  = "BENTO_DEPLOYMENT_NAMESPACES"
+	EnvImageBuildersNamespace     = "IMAGE_BUILDERS_NAMESPACE"
 )

@@ -18,14 +18,11 @@ const (
 	KubeHPAQPSMetric = "http_request"
 	KubeHPAGPUMetric = "container_accelerator_duty_cycle"
 
-	KubeNamespaceYataiBentoImageBuilder = "yatai-builders"
-	KubeNamespaceYataiModelImageBuilder = "yatai-builders"
-	KubeNamespaceYataiDeployment        = "yatai"
-	KubeNamespaceYataiOperators         = "yatai-operators"
-	KubeNamespaceYataiComponents        = "yatai-components"
-
-	KubeNamespaceYataiSystem              = "yatai-system"
-	KubeNamespaceYataiDeploymentComponent = "yatai-deployment"
+	DefaultKubeNamespaceBentoDeployment            = "yatai"
+	DefaultKubeNamespaceImageBuilders              = "yatai-builders"
+	DefaultKubeNamespaceYataiSystem                = "yatai-system"
+	DefaultKubeNamespaceYataiImageBuilderComponent = "yatai-image-builder"
+	DefaultKubeNamespaceYataiDeploymentComponent   = "yatai-deployment"
 
 	KubeLabelYataiBentoDeployment              = "yatai.ai/bento-deployment"
 	KubeLabelYataiBentoDeploymentComponentType = "yatai.ai/bento-deployment-component-type"
@@ -81,7 +78,9 @@ const (
 	KubeImageCSIDriver          = "image.csi.k8s.io"
 	KubeImageCSIDriverWarmMetal = "csi-image.warm-metal.tech"
 
-	KubeConfigMapNameNetworkConfig = "network"
+	KubeConfigMapNameNetworkConfig        = "network"
+	KubeConfigMapNameYataiImageBuilderEnv = "yatai-image-builder-env"
+	KubeConfigMapNameYataiDeploymentEnv   = "yatai-image-builder-env"
 
 	KubeConfigMapKeyNetworkConfigDomainSuffix       = "domain-suffix"
 	KubeConfigMapKeyNetworkConfigIngressClass       = "ingress-class"
@@ -96,6 +95,10 @@ const (
 
 	// nolint: gosec
 	KubeSecretNameRegcred = "yatai-regcred"
+
+	KubeSecretNameYataiCommonEnv             = "yatai-common-env"
+	KubeSecretNameYataiImageBuilderSharedEnv = "yatai-image-builder-shared-env"
+	KubeSecretNameYataiDeploymentSharedEnv   = "yatai-deployment-shared-env"
 )
 
 var KubeListEverything = metav1.ListOptions{
