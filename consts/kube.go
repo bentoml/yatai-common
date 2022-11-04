@@ -33,7 +33,8 @@ const (
 	KubeLabelBentoVersion                      = "yatai.ai/bento-version"
 	KubeLabelCreator                           = "yatai.ai/creator"
 	// nolint: gosec
-	KubeLabelYataiDeployToken = "yatai.ai/deploy-token"
+	KubeLabelYataiDeployToken    = "yatai.ai/deploy-token"
+	KubeLabelIsBentoImageBuilder = "yatai.ai/is-bento-image-builder"
 
 	KubeLabelYataiOwnerReference = "yatai.ai/owner-reference"
 
