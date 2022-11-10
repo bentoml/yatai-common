@@ -14,13 +14,16 @@ import (
 	"github.com/bentoml/yatai-common/consts"
 )
 
-func GetYataiSystemNamespaceFromEnv() (namespace string) {
-	namespace = os.Getenv(consts.EnvYataiSystemNamespace)
-	if namespace == "" {
-		namespace = consts.DefaultKubeNamespaceYataiSystem
-	}
+func GetYataiImageBuilderSharedEnvSecretNameFromEnv() string {
+	return getEnv(consts.EnvYataiImageBuilderSharedEnvSecretName, consts.DefaultKubeSecretNameYataiImageBuilderSharedEnv)
+}
 
-	return
+func GetYataiDeploymentSharedEnvSecretNameFromEnv() string {
+	return getEnv(consts.EnvYataiDeploymentSharedEnvSecretName, consts.DefaultKubeSecretNameYataiDeploymentSharedEnv)
+}
+
+func GetYataiSystemNamespaceFromEnv() string {
+	return getEnv(consts.EnvYataiSystemNamespace, consts.DefaultKubeNamespaceYataiSystem)
 }
 
 func GetYataiImageBuilderNamespace(ctx context.Context, cliset *kubernetes.Clientset) (namespace string, err error) {
@@ -30,11 +33,12 @@ func GetYataiImageBuilderNamespace(ctx context.Context, cliset *kubernetes.Clien
 	}
 
 	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+	yataiImageBuilderSharedEnvSecretName := GetYataiImageBuilderSharedEnvSecretNameFromEnv()
 
-	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiImageBuilderSharedEnv, metav1.GetOptions{})
+	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, yataiImageBuilderSharedEnvSecretName, metav1.GetOptions{})
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
-			err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiImageBuilderSharedEnv, yataiSystemNamespace)
+			err = errors.Wrapf(err, "secret %s not found in namespace %s", yataiImageBuilderSharedEnvSecretName, yataiSystemNamespace)
 		}
 		return
 	}
@@ -54,11 +58,12 @@ func GetYataiDeploymentNamespace(ctx context.Context, cliset *kubernetes.Clients
 	}
 
 	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+	yataiDeploymentSharedEnvSecretName := GetYataiDeploymentSharedEnvSecretNameFromEnv()
 
-	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiDeploymentSharedEnv, metav1.GetOptions{})
+	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, yataiDeploymentSharedEnvSecretName, metav1.GetOptions{})
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
-			err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiDeploymentSharedEnv, yataiSystemNamespace)
+			err = errors.Wrapf(err, "secret %s not found in namespace %s", yataiDeploymentSharedEnvSecretName, yataiSystemNamespace)
 		}
 		return
 	}
@@ -78,11 +83,12 @@ func GetImageBuildersNamespace(ctx context.Context, cliset *kubernetes.Clientset
 	}
 
 	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+	yataiImageBuilderSharedEnvSecretName := GetYataiImageBuilderSharedEnvSecretNameFromEnv()
 
-	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiImageBuilderSharedEnv, metav1.GetOptions{})
+	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, yataiImageBuilderSharedEnvSecretName, metav1.GetOptions{})
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
-			err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiImageBuilderSharedEnv, yataiSystemNamespace)
+			err = errors.Wrapf(err, "secret %s not found in namespace %s", yataiImageBuilderSharedEnvSecretName, yataiSystemNamespace)
 		}
 		return
 	}
@@ -103,11 +109,12 @@ func GetBentoDeploymentNamespaces(ctx context.Context, cliset *kubernetes.Client
 	}
 
 	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+	yataiDeploymentSharedEnvSecretName := GetYataiDeploymentSharedEnvSecretNameFromEnv()
 
-	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiDeploymentSharedEnv, metav1.GetOptions{})
+	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, yataiDeploymentSharedEnvSecretName, metav1.GetOptions{})
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
-			err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiDeploymentSharedEnv, yataiSystemNamespace)
+			err = errors.Wrapf(err, "secret %s not found in namespace %s", yataiDeploymentSharedEnvSecretName, yataiSystemNamespace)
 		}
 		return
 	}
@@ -169,13 +176,14 @@ func GetDockerRegistryConfig(ctx context.Context, cliset *kubernetes.Clientset) 
 
 	if conf.Server == "" {
 		yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
+		yataiImageBuilderSharedEnvSecretName := GetYataiImageBuilderSharedEnvSecretNameFromEnv()
 
 		var secret *corev1.Secret
 
-		secret, err = cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiImageBuilderSharedEnv, metav1.GetOptions{})
+		secret, err = cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, yataiImageBuilderSharedEnvSecretName, metav1.GetOptions{})
 		if err != nil {
 			if k8serrors.IsNotFound(err) {
-				err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiImageBuilderSharedEnv, yataiSystemNamespace)
+				err = errors.Wrapf(err, "secret %s not found in namespace %s", yataiImageBuilderSharedEnvSecretName, yataiSystemNamespace)
 			}
 			return
 		}

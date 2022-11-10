@@ -43,4 +43,7 @@ const (
 	EnvYataiDeploymentNamespace   = "YATAI_DEPLOYMENT_NAMESPACE"
 	EnvBentoDeploymentNamespaces  = "BENTO_DEPLOYMENT_NAMESPACES"
 	EnvImageBuildersNamespace     = "IMAGE_BUILDERS_NAMESPACE"
+
+	EnvYataiImageBuilderSharedEnvSecretName = "YATAI_IMAGE_BUILDER_SHARED_ENV_SECRET_NAME"
+	EnvYataiDeploymentSharedEnvSecretName   = "YATAI_DEPLOYMENT_SHARED_ENV_SECRET_NAME"
 )

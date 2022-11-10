@@ -98,9 +98,9 @@ const (
 	// nolint: gosec
 	KubeSecretNameRegcred = "yatai-regcred"
 
-	KubeSecretNameYataiCommonEnv             = "yatai-common-env"
-	KubeSecretNameYataiImageBuilderSharedEnv = "yatai-image-builder-shared-env"
-	KubeSecretNameYataiDeploymentSharedEnv   = "yatai-deployment-shared-env"
+	KubeSecretNameYataiCommonEnv                    = "yatai-common-env"
+	DefaultKubeSecretNameYataiImageBuilderSharedEnv = "yatai-image-builder-shared-env"
+	DefaultKubeSecretNameYataiDeploymentSharedEnv   = "yatai-deployment-shared-env"
 )
 
 var KubeListEverything = metav1.ListOptions{
