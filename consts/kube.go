@@ -80,9 +80,7 @@ const (
 	KubeImageCSIDriver          = "image.csi.k8s.io"
 	KubeImageCSIDriverWarmMetal = "csi-image.warm-metal.tech"
 
-	KubeConfigMapNameNetworkConfig        = "network"
-	KubeConfigMapNameYataiImageBuilderEnv = "yatai-image-builder-env"
-	KubeConfigMapNameYataiDeploymentEnv   = "yatai-image-builder-env"
+	KubeConfigMapNameNetworkConfig = "network"
 
 	KubeConfigMapKeyNetworkConfigDomainSuffix       = "domain-suffix"
 	KubeConfigMapKeyNetworkConfigIngressClass       = "ingress-class"
@@ -98,9 +96,13 @@ const (
 	// nolint: gosec
 	KubeSecretNameRegcred = "yatai-regcred"
 
-	KubeSecretNameYataiCommonEnv                    = "yatai-common-env"
-	DefaultKubeSecretNameYataiImageBuilderSharedEnv = "yatai-image-builder-shared-env"
-	DefaultKubeSecretNameYataiDeploymentSharedEnv   = "yatai-deployment-shared-env"
+	KubeSecretNameYataiCommonEnv = "yatai-common-env"
+
+	KubeSecretNameYataiImageBuilderSharedEnv = "yatai-image-builder-shared-env"
+	KubeSecretNameYataiDeploymentSharedEnv   = "yatai-deployment-shared-env"
+
+	KubeSecretNameYataiImageBuilderEnv = "yatai-image-builder-env"
+	KubeSecretNameYataiDeploymentEnv   = "yatai-deployment-env"
 )
 
 var KubeListEverything = metav1.ListOptions{
