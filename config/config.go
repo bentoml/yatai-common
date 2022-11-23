@@ -272,13 +272,15 @@ func getEnv(key, fallback string) string {
 }
 
 type InternalImages struct {
-	Curl               string `yaml:"curl"`
-	Kaniko             string `yaml:"kaniko"`
-	MetricsTransformer string `yaml:"metrics-transformer"`
+	BentoDownloader    string
+	Curl               string
+	Kaniko             string
+	MetricsTransformer string
 }
 
 func GetInternalImages() (conf *InternalImages) {
 	conf = &InternalImages{}
+	conf.BentoDownloader = getEnv(consts.EnvInternalImagesBentoDownloader, consts.InternalImagesBentoDownloaderDefault)
 	conf.Curl = getEnv(consts.EnvInternalImagesCurl, consts.InternalImagesCurlDefault)
 	conf.Kaniko = getEnv(consts.EnvInternalImagesKaniko, consts.InternalImagesKanikoDefault)
 	conf.MetricsTransformer = getEnv(consts.EnvInternalImagesMetricsTransformer, consts.InternalImagesMetricsTransformerDefault)

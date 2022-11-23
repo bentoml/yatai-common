@@ -34,6 +34,7 @@ const (
 	EnvDockerRegistryBentoRepositoryName = "DOCKER_REGISTRY_BENTO_REPOSITORY_NAME"
 	EnvDockerRegistryModelRepositoryName = "DOCKER_REGISTRY_MODEL_REPOSITORY_NAME"
 
+	EnvInternalImagesBentoDownloader    = "INTERNAL_IMAGES_BENTO_DOWNLOADER"
 	EnvInternalImagesCurl               = "INTERNAL_IMAGES_CURL"
 	EnvInternalImagesKaniko             = "INTERNAL_IMAGES_KANIKO"
 	EnvInternalImagesMetricsTransformer = "INTERNAL_IMAGES_METRICS_TRANSFORMER"
@@ -43,4 +44,7 @@ const (
 	EnvYataiDeploymentNamespace   = "YATAI_DEPLOYMENT_NAMESPACE"
 	EnvBentoDeploymentNamespaces  = "BENTO_DEPLOYMENT_NAMESPACES"
 	EnvImageBuildersNamespace     = "IMAGE_BUILDERS_NAMESPACE"
+
+	EnvAWSAccessKeyID     = "AWS_ACCESS_KEY_ID"
+	EnvAWSSecretAccessKey = "AWS_SECRET_ACCESS_KEY"
 )
