@@ -22,56 +22,71 @@ import (
 	"github.com/bentoml/yatai-common/consts"
 )
 
-func GetIngressAnnotations(ctx context.Context, cliset *kubernetes.Clientset) (annotations map[string]string, err error) {
-	configMap, err := GetNetworkConfigConfigMap(ctx, cliset)
-	if err != nil {
-		err = errors.Wrapf(err, "failed to get configmap %s", consts.KubeConfigMapNameNetworkConfig)
-		return
-	}
-
-	annotations = make(map[string]string)
-
-	annotationsStr := strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressAnnotations])
-
-	if annotationsStr == "" {
-		return
-	}
-
-	err = json.Unmarshal([]byte(annotationsStr), &annotations)
-	if err != nil {
-		err = errors.Wrapf(err, "failed to json unmarshal %s in configmap %s: %s", consts.KubeConfigMapKeyNetworkConfigIngressAnnotations, consts.KubeConfigMapNameNetworkConfig, annotationsStr)
-		return
-	}
-
-	return
+type IngressConfig struct {
+	ClassName   *string
+	Annotations map[string]string
+	Path        string
+	PathType    networkingv1.PathType
 }
 
-func GetIngressClassName(ctx context.Context, cliset *kubernetes.Clientset) (ingressClassName *string, err error) {
+func GetIngressConfig(ctx context.Context, cliset *kubernetes.Clientset) (ingressConfig *IngressConfig, err error) {
 	configMap, err := GetNetworkConfigConfigMap(ctx, cliset)
 	if err != nil {
 		err = errors.Wrapf(err, "failed to get configmap %s", consts.KubeConfigMapNameNetworkConfig)
 		return
 	}
 
-	ingressClassName_ := strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressClass])
+	var className *string
 
-	if ingressClassName_ != "" {
-		ingressClassName = &ingressClassName_
+	className_ := strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressClass])
+	if className_ != "" {
+		className = &className_
+	}
+
+	annotations := make(map[string]string)
+
+	annotations_ := strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressAnnotations])
+	if annotations_ == "" {
+		return
+	}
+
+	err = json.Unmarshal([]byte(annotations_), &annotations)
+	if err != nil {
+		err = errors.Wrapf(err, "failed to json unmarshal %s in configmap %s: %s", consts.KubeConfigMapKeyNetworkConfigIngressAnnotations, consts.KubeConfigMapNameNetworkConfig, annotations_)
+		return
+	}
+
+	path := strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressPath])
+	if path == "" {
+		path = "/"
+	}
+
+	pathType := networkingv1.PathTypeImplementationSpecific
+
+	pathType_ := strings.TrimSpace(configMap.Data[consts.KubeConfigMapKeyNetworkConfigIngressPathType])
+	if pathType_ != "" {
+		pathType = networkingv1.PathType(pathType_)
+	}
+
+	ingressConfig = &IngressConfig{
+		ClassName:   className,
+		Annotations: annotations,
+		Path:        path,
+		PathType:    pathType,
 	}
 
 	return
 }
 
 func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string, err error) {
-	ingressClassName, err := GetIngressClassName(ctx, cliset)
+	ingressConfig, err := GetIngressConfig(ctx, cliset)
 	if err != nil {
+		err = errors.Wrapf(err, "failed to get ingress config")
 		return
 	}
 
-	ingressAnnotations, err := GetIngressAnnotations(ctx, cliset)
-	if err != nil {
-		return
-	}
+	ingressClassName := ingressConfig.ClassName
+	ingressAnnotations := ingressConfig.Annotations
 
 	ingressCli := cliset.NetworkingV1().Ingresses(GetNamespace())
 
