@@ -47,4 +47,7 @@ const (
 
 	EnvAWSAccessKeyID     = "AWS_ACCESS_KEY_ID"
 	EnvAWSSecretAccessKey = "AWS_SECRET_ACCESS_KEY"
+
+	EnvAWSECRWithIAMRole = "AWS_ECR_WITH_IAM_ROLE"
+	EnvAWSECRRegion      = "AWS_ECR_REGION"
 )

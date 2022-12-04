@@ -43,11 +43,10 @@ const (
 	KubeLabelHostName = "kubernetes.io/hostname"
 	KubeLabelArch     = "kubernetes.io/arch"
 
-	KubeLabelMcdNodePool       = "mcd.io/node-pool"
-	KubeLabelAlibabaEdgeWorker = "alibabacloud.com/is-edge-worker"
-	KubeLabelMcdEdgeWorker     = "mcd.io/is-edge-worker"
-	KubeLabelFalse             = "false"
-	KubeLabelTrue              = "true"
+	KubeLabelValueFalse = "false"
+	KubeLabelValueTrue  = "true"
+
+	KubeLabelYataiImageBuilderPod = "yatai.ai/yatai-image-builder-pod"
 
 	KubeLabelManagedBy    = "app.kubernetes.io/managed-by"
 	KubeLabelHelmHeritage = "heritage"
