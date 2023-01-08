@@ -38,6 +38,8 @@ const (
 	EnvInternalImagesCurl               = "INTERNAL_IMAGES_CURL"
 	EnvInternalImagesKaniko             = "INTERNAL_IMAGES_KANIKO"
 	EnvInternalImagesMetricsTransformer = "INTERNAL_IMAGES_METRICS_TRANSFORMER"
+	EnvInternalImagesBuildkit           = "INTERNAL_IMAGES_BUILDKIT"
+	EnvInternalImagesBuildkitRootless   = "INTERNAL_IMAGES_BUILDKIT_ROOTLESS"
 
 	EnvYataiSystemNamespace       = "YATAI_SYSTEM_NAMESPACE"
 	EnvYataiImageBuilderNamespace = "YATAI_IMAGE_BUILDER_NAMESPACE"

@@ -276,6 +276,8 @@ type InternalImages struct {
 	Curl               string
 	Kaniko             string
 	MetricsTransformer string
+	Buildkit           string
+	BuildkitRootless   string
 }
 
 func GetInternalImages() (conf *InternalImages) {
@@ -284,6 +286,8 @@ func GetInternalImages() (conf *InternalImages) {
 	conf.Curl = getEnv(consts.EnvInternalImagesCurl, consts.InternalImagesCurlDefault)
 	conf.Kaniko = getEnv(consts.EnvInternalImagesKaniko, consts.InternalImagesKanikoDefault)
 	conf.MetricsTransformer = getEnv(consts.EnvInternalImagesMetricsTransformer, consts.InternalImagesMetricsTransformerDefault)
+	conf.Buildkit = getEnv(consts.EnvInternalImagesBuildkit, consts.InternalImagesBuildkitDefault)
+	conf.BuildkitRootless = getEnv(consts.EnvInternalImagesBuildkitRootless, consts.InternalImagesBuildkitRootlessDefault)
 
 	return
 }

@@ -42,4 +42,6 @@ const (
 	InternalImagesCurlDefault               = "quay.io/bentoml/curl:0.0.1"
 	InternalImagesKanikoDefault             = "quay.io/bentoml/kaniko:1.9.1"
 	InternalImagesMetricsTransformerDefault = "quay.io/bentoml/yatai-bento-metrics-transformer:0.0.2"
+	InternalImagesBuildkitDefault           = "quay.io/bentoml/buildkit:master"
+	InternalImagesBuildkitRootlessDefault   = "quay.io/bentoml/buildkit:master-rootless"
 )
