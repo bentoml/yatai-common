@@ -44,4 +44,5 @@ const (
 	InternalImagesMetricsTransformerDefault = "quay.io/bentoml/yatai-bento-metrics-transformer:0.0.3"
 	InternalImagesBuildkitDefault           = "quay.io/bentoml/buildkit:master"
 	InternalImagesBuildkitRootlessDefault   = "quay.io/bentoml/buildkit:master-rootless"
+	InternalImagesBuildahDefault            = "quay.io/bentoml/bentoml-buildah:0.0.1"
 )

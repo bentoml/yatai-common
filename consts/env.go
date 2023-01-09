@@ -40,6 +40,7 @@ const (
 	EnvInternalImagesMetricsTransformer = "INTERNAL_IMAGES_METRICS_TRANSFORMER"
 	EnvInternalImagesBuildkit           = "INTERNAL_IMAGES_BUILDKIT"
 	EnvInternalImagesBuildkitRootless   = "INTERNAL_IMAGES_BUILDKIT_ROOTLESS"
+	EnvInternalImagesBuildah            = "INTERNAL_IMAGES_BUILDAH"
 
 	EnvYataiSystemNamespace       = "YATAI_SYSTEM_NAMESPACE"
 	EnvYataiImageBuilderNamespace = "YATAI_IMAGE_BUILDER_NAMESPACE"
