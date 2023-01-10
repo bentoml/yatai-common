@@ -47,6 +47,7 @@ const (
 	KubeLabelValueTrue  = "true"
 
 	KubeLabelYataiImageBuilderPod = "yatai.ai/yatai-image-builder-pod"
+	KubeLabelBentoDeploymentPod   = "yatai.ai/bento-deployment-pod"
 
 	KubeLabelManagedBy    = "app.kubernetes.io/managed-by"
 	KubeLabelHelmHeritage = "heritage"
