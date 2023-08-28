@@ -9,12 +9,11 @@ import (
 const (
 	KubeIngressClassName = "yatai-ingress"
 
-	KubeLabelYataiSelector          = "yatai.ai/selector"
-	KubeLabelYataiBentoRepository   = "yatai.ai/bento-repository"
-	KubeLabelYataiBento             = "yatai.ai/bento"
-	KubeLabelYataiModelRepository   = "yatai.ai/model-repository"
-	KubeLabelYataiModel             = "yatai.ai/model"
-	KubeLabelAWSAccessKeySecretName = "yatai.ai/aws-access-key-secret-name"
+	KubeLabelYataiSelector        = "yatai.ai/selector"
+	KubeLabelYataiBentoRepository = "yatai.ai/bento-repository"
+	KubeLabelYataiBento           = "yatai.ai/bento"
+	KubeLabelYataiModelRepository = "yatai.ai/model-repository"
+	KubeLabelYataiModel           = "yatai.ai/model"
 
 	KubeHPAQPSMetric = "http_request"
 	KubeHPAGPUMetric = "container_accelerator_duty_cycle"
@@ -68,6 +67,7 @@ const (
 	KubeAnnotationARMSAutoEnable                  = "armsPilotAutoEnable"
 	KubeAnnotationARMSAppName                     = "armsPilotCreateAppName"
 	KubeAnnotationYataiImageBuilderSeparateModels = "yatai.ai/yatai-image-builder-separate-models"
+	KubeAnnotationAWSAccessKeySecretName          = "yatai.ai/aws-access-key-secret-name"
 
 	KubeCreator = "yatai"
 
