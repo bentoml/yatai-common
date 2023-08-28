@@ -14,6 +14,7 @@ const (
 	KubeLabelYataiBento           = "yatai.ai/bento"
 	KubeLabelYataiModelRepository = "yatai.ai/model-repository"
 	KubeLabelYataiModel           = "yatai.ai/model"
+	KubeLabelYataiImageBuilderSeparateModels        = "yatai.ai/yatai-image-builder-separate-models"
 	KubeLabelAWSAccessKeySecretName = "yatai.ai/aws-access-key-secret-name"
 
 	KubeHPAQPSMetric = "http_request"
