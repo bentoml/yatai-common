@@ -156,7 +156,7 @@ type DockerRegistryConfig struct {
 	Secure              bool   `yaml:"secure"`
 }
 
-func GetDockerRegistryConfig(ctx context.Context, cliset *kubernetes.Clientset) (conf *DockerRegistryConfig, err error) {
+func GetDockerRegistryConfig(ctx context.Context, secretGetter func(ctx context.Context, namespace, name string) (*corev1.Secret, error)) (conf *DockerRegistryConfig, err error) {
 	conf = &DockerRegistryConfig{}
 	conf.BentoRepositoryName = os.Getenv(consts.EnvDockerRegistryBentoRepositoryName)
 	conf.ModelRepositoryName = os.Getenv(consts.EnvDockerRegistryModelRepositoryName)
@@ -172,7 +172,7 @@ func GetDockerRegistryConfig(ctx context.Context, cliset *kubernetes.Clientset) 
 
 		var secret *corev1.Secret
 
-		secret, err = cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, yataiImageBuilderSharedEnvSecretName, metav1.GetOptions{})
+		secret, err = secretGetter(ctx, yataiSystemNamespace, yataiImageBuilderSharedEnvSecretName)
 		if err != nil {
 			if k8serrors.IsNotFound(err) {
 				err = errors.Wrapf(err, "secret %s not found in namespace %s", yataiImageBuilderSharedEnvSecretName, yataiSystemNamespace)
