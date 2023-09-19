@@ -18,7 +18,7 @@ func GetYataiSystemNamespaceFromEnv() string {
 	return getEnv(consts.EnvYataiSystemNamespace, consts.DefaultKubeNamespaceYataiSystem)
 }
 
-func GetYataiImageBuilderNamespace(ctx context.Context, cliset *kubernetes.Clientset) (namespace string, err error) {
+func GetYataiImageBuilderNamespace(ctx context.Context, secretGetter func(ctx context.Context, namespace, name string) (*corev1.Secret, error)) (namespace string, err error) {
 	namespace = os.Getenv(consts.EnvYataiImageBuilderNamespace)
 	if namespace != "" {
 		return
@@ -27,7 +27,7 @@ func GetYataiImageBuilderNamespace(ctx context.Context, cliset *kubernetes.Clien
 	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
 	yataiImageBuilderSharedEnvSecretName := consts.KubeSecretNameYataiImageBuilderSharedEnv
 
-	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, yataiImageBuilderSharedEnvSecretName, metav1.GetOptions{})
+	secret, err := secretGetter(ctx, yataiSystemNamespace, yataiImageBuilderSharedEnvSecretName)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
 			err = errors.Wrapf(err, "secret %s not found in namespace %s", yataiImageBuilderSharedEnvSecretName, yataiSystemNamespace)
@@ -43,7 +43,7 @@ func GetYataiImageBuilderNamespace(ctx context.Context, cliset *kubernetes.Clien
 	return
 }
 
-func GetYataiDeploymentNamespace(ctx context.Context, cliset *kubernetes.Clientset) (namespace string, err error) {
+func GetYataiDeploymentNamespace(ctx context.Context, secretGetter func(ctx context.Context, namespace, name string) (*corev1.Secret, error)) (namespace string, err error) {
 	namespace = os.Getenv(consts.EnvYataiDeploymentNamespace)
 	if namespace != "" {
 		return
@@ -52,7 +52,7 @@ func GetYataiDeploymentNamespace(ctx context.Context, cliset *kubernetes.Clients
 	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
 	yataiDeploymentSharedEnvSecretName := consts.KubeSecretNameYataiDeploymentSharedEnv
 
-	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, yataiDeploymentSharedEnvSecretName, metav1.GetOptions{})
+	secret, err := secretGetter(ctx, yataiSystemNamespace, yataiDeploymentSharedEnvSecretName)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
 			err = errors.Wrapf(err, "secret %s not found in namespace %s", yataiDeploymentSharedEnvSecretName, yataiSystemNamespace)
@@ -203,7 +203,7 @@ type YataiConfig struct {
 	ApiToken    string `yaml:"api_token"`
 }
 
-func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, yataiComponentName string, ignoreEnv bool) (conf *YataiConfig, err error) {
+func GetYataiConfig(ctx context.Context, secretGetter func(ctx context.Context, namespace, name string) (*corev1.Secret, error), yataiComponentName string, ignoreEnv bool) (conf *YataiConfig, err error) {
 	conf = &YataiConfig{}
 	if !ignoreEnv {
 		conf.Endpoint = os.Getenv(consts.EnvYataiEndpoint)
@@ -215,7 +215,7 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, yataiComp
 
 	if conf.Endpoint == "" {
 		var secret *corev1.Secret
-		secret, err = cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, consts.KubeSecretNameYataiCommonEnv, metav1.GetOptions{})
+		secret, err = secretGetter(ctx, yataiSystemNamespace, consts.KubeSecretNameYataiCommonEnv)
 		if err != nil {
 			if k8serrors.IsNotFound(err) {
 				err = errors.Wrapf(err, "secret %s not found in namespace %s", consts.KubeSecretNameYataiCommonEnv, yataiSystemNamespace)
@@ -232,14 +232,14 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, yataiComp
 		var secretNamespace string
 		if yataiComponentName == consts.YataiImageBuilderComponentName {
 			secretName = consts.KubeSecretNameYataiImageBuilderEnv
-			secretNamespace, err = GetYataiImageBuilderNamespace(ctx, cliset)
+			secretNamespace, err = GetYataiImageBuilderNamespace(ctx, secretGetter)
 			if err != nil {
 				err = errors.Wrapf(err, "failed to get namespace for %s", yataiComponentName)
 				return
 			}
 		} else if yataiComponentName == consts.YataiDeploymentComponentName {
 			secretName = consts.KubeSecretNameYataiDeploymentEnv
-			secretNamespace, err = GetYataiDeploymentNamespace(ctx, cliset)
+			secretNamespace, err = GetYataiDeploymentNamespace(ctx, secretGetter)
 			if err != nil {
 				err = errors.Wrapf(err, "failed to get namespace for %s", yataiComponentName)
 				return
@@ -248,7 +248,7 @@ func GetYataiConfig(ctx context.Context, cliset *kubernetes.Clientset, yataiComp
 			err = errors.Errorf("invalid yatai component name %s", yataiComponentName)
 			return
 		}
-		secret, err = cliset.CoreV1().Secrets(secretNamespace).Get(ctx, secretName, metav1.GetOptions{})
+		secret, err = secretGetter(ctx, secretNamespace, secretName)
 		if err != nil {
 			if k8serrors.IsNotFound(err) {
 				err = errors.Errorf("the secret %s in namespace %s does not exist", secretName, secretNamespace)
