@@ -15,8 +15,8 @@ import (
 	"github.com/bentoml/yatai-common/consts"
 )
 
-func MakeSureDockerRegcred(ctx context.Context, cliset *kubernetes.Clientset, namespace string) (secret *corev1.Secret, err error) {
-	dockerRegistry, err := config.GetDockerRegistryConfig(ctx, cliset)
+func MakeSureDockerRegcred(ctx context.Context, secretGetter func(ctx context.Context, namespace, name string) (*corev1.Secret, error), cliset *kubernetes.Clientset, namespace string) (secret *corev1.Secret, err error) {
+	dockerRegistry, err := config.GetDockerRegistryConfig(ctx, secretGetter)
 	if err != nil {
 		return
 	}
@@ -25,7 +25,7 @@ func MakeSureDockerRegcred(ctx context.Context, cliset *kubernetes.Clientset, na
 		return
 	}
 
-	secret, err = cliset.CoreV1().Secrets(namespace).Get(ctx, consts.KubeSecretNameRegcred, metav1.GetOptions{})
+	secret, err = secretGetter(ctx, namespace, consts.KubeSecretNameRegcred)
 	isNotFound := k8serrors.IsNotFound(err)
 	if err != nil && !isNotFound {
 		return
@@ -66,7 +66,7 @@ func MakeSureDockerRegcred(ctx context.Context, cliset *kubernetes.Clientset, na
 		if err != nil {
 			return
 		}
-	} else {
+	} else if string(secret.Data[".dockerconfigjson"]) != string(dockerConfigContent) {
 		secret.Data[".dockerconfigjson"] = dockerConfigContent
 		secret, err = cliset.CoreV1().Secrets(namespace).Update(ctx, secret, metav1.UpdateOptions{})
 		if err != nil {
