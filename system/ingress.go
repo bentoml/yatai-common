@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"
+	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -29,8 +30,8 @@ type IngressConfig struct {
 	PathType    networkingv1.PathType
 }
 
-func GetIngressConfig(ctx context.Context, cliset *kubernetes.Clientset) (ingressConfig *IngressConfig, err error) {
-	configMap, err := GetNetworkConfigConfigMap(ctx, cliset)
+func GetIngressConfig(ctx context.Context, configmapGetter func(ctx context.Context, namespace, name string) (*corev1.ConfigMap, error)) (ingressConfig *IngressConfig, err error) {
+	configMap, err := GetNetworkConfigConfigMap(ctx, configmapGetter)
 	if err != nil {
 		err = errors.Wrapf(err, "failed to get configmap %s", consts.KubeConfigMapNameNetworkConfig)
 		return
@@ -76,8 +77,8 @@ func GetIngressConfig(ctx context.Context, cliset *kubernetes.Clientset) (ingres
 	return
 }
 
-func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string, err error) {
-	ingressConfig, err := GetIngressConfig(ctx, cliset)
+func GetIngressIP(ctx context.Context, configmapGetter func(ctx context.Context, namespace, name string) (*corev1.ConfigMap, error), cliset *kubernetes.Clientset) (ip string, err error) {
+	ingressConfig, err := GetIngressConfig(ctx, configmapGetter)
 	if err != nil {
 		err = errors.Wrapf(err, "failed to get ingress config")
 		return
@@ -178,8 +179,8 @@ func GetIngressIP(ctx context.Context, cliset *kubernetes.Clientset) (ip string,
 	return
 }
 
-func GetDomainSuffix(ctx context.Context, cliset *kubernetes.Clientset) (domainSuffix string, err error) {
-	configMap, err := GetNetworkConfigConfigMap(ctx, cliset)
+func GetDomainSuffix(ctx context.Context, configmapGetter func(ctx context.Context, namespace, name string) (*corev1.ConfigMap, error), cliset *kubernetes.Clientset) (domainSuffix string, err error) {
+	configMap, err := GetNetworkConfigConfigMap(ctx, configmapGetter)
 	if err != nil {
 		err = errors.Wrapf(err, "failed to get configmap %s", consts.KubeConfigMapNameNetworkConfig)
 		return
@@ -195,7 +196,7 @@ func GetDomainSuffix(ctx context.Context, cliset *kubernetes.Clientset) (domainS
 
 	var ip string
 
-	ip, err = GetIngressIP(ctx, cliset)
+	ip, err = GetIngressIP(ctx, configmapGetter, cliset)
 	if err != nil {
 		return
 	}
