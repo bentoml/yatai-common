@@ -93,7 +93,7 @@ func GetImageBuildersNamespace(ctx context.Context, cliset *kubernetes.Clientset
 	return
 }
 
-func GetBentoDeploymentNamespaces(ctx context.Context, cliset *kubernetes.Clientset) (namespaces []string, err error) {
+func GetBentoDeploymentNamespaces(ctx context.Context, secretGetter func(ctx context.Context, namespace, name string) (*corev1.Secret, error)) (namespaces []string, err error) {
 	namespaces_ := os.Getenv(consts.EnvBentoDeploymentNamespaces)
 	if namespaces_ != "" {
 		namespaces = strings.Split(namespaces_, ",")
@@ -103,7 +103,7 @@ func GetBentoDeploymentNamespaces(ctx context.Context, cliset *kubernetes.Client
 	yataiSystemNamespace := GetYataiSystemNamespaceFromEnv()
 	yataiDeploymentSharedEnvSecretName := consts.KubeSecretNameYataiDeploymentSharedEnv
 
-	secret, err := cliset.CoreV1().Secrets(yataiSystemNamespace).Get(ctx, yataiDeploymentSharedEnvSecretName, metav1.GetOptions{})
+	secret, err := secretGetter(ctx, yataiSystemNamespace, yataiDeploymentSharedEnvSecretName)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
 			err = errors.Wrapf(err, "secret %s not found in namespace %s", yataiDeploymentSharedEnvSecretName, yataiSystemNamespace)
