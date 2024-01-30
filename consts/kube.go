@@ -24,18 +24,19 @@ const (
 	DefaultKubeNamespaceYataiImageBuilderComponent = "yatai-image-builder"
 	DefaultKubeNamespaceYataiDeploymentComponent   = "yatai-deployment"
 
-	KubeLabelYataiBentoDeployment              = "yatai.ai/bento-deployment"
-	KubeLabelYataiBentoDeploymentComponentType = "yatai.ai/bento-deployment-component-type"
-	KubeLabelYataiBentoDeploymentComponentName = "yatai.ai/bento-deployment-component-name"
-	KubeLabelYataiBentoDeploymentTargetType    = "yatai.ai/bento-deployment-target-type"
-	KubeLabelYataiBentoDeploymentRunner        = "yatai.ai/bento-deployment-runner"
-	KubeLabelBentoRepository                   = "yatai.ai/bento-repository"
-	KubeLabelBentoVersion                      = "yatai.ai/bento-version"
-	KubeLabelCreator                           = "yatai.ai/creator"
+	KubeLabelYataiBentoDeployment                = "yatai.ai/bento-deployment"
+	KubeLabelYataiBentoDeploymentComponentType   = "yatai.ai/bento-deployment-component-type"
+	KubeLabelYataiBentoDeploymentComponentName   = "yatai.ai/bento-deployment-component-name"
+	KubeLabelYataiBentoDeploymentTargetType      = "yatai.ai/bento-deployment-target-type"
+	KubeLabelYataiBentoDeploymentRunner          = "yatai.ai/bento-deployment-runner"
+	KubeLabelYataiBentoDeploymentServiceInstance = "yatai.ai/bento-deployment-service-instance"
+	KubeLabelBentoRepository                     = "yatai.ai/bento-repository"
+	KubeLabelBentoVersion                        = "yatai.ai/bento-version"
+	KubeLabelCreator                             = "yatai.ai/creator"
 	// nolint: gosec
 	KubeLabelYataiDeployToken    = "yatai.ai/deploy-token"
 	KubeLabelIsBentoImageBuilder = "yatai.ai/is-bento-image-builder"
-	KubeLabelIsModelSeeder = "yatai.ai/is-model-seeder"
+	KubeLabelIsModelSeeder       = "yatai.ai/is-model-seeder"
 	KubeLabelBentoRequest        = "yatai.ai/bento-request"
 
 	KubeLabelYataiOwnerReference = "yatai.ai/owner-reference"
@@ -69,7 +70,7 @@ const (
 	KubeAnnotationARMSAppName                     = "armsPilotCreateAppName"
 	KubeAnnotationYataiImageBuilderSeparateModels = "yatai.ai/yatai-image-builder-separate-models"
 	KubeAnnotationAWSAccessKeySecretName          = "yatai.ai/aws-access-key-secret-name"
-	KubeAnnotationIsMultiTenancy = "yatai.ai/is-multi-tenancy"
+	KubeAnnotationIsMultiTenancy                  = "yatai.ai/is-multi-tenancy"
 
 	KubeCreator = "yatai"
 
