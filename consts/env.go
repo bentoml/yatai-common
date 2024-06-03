@@ -49,7 +49,9 @@ const (
 	EnvImageBuildersNamespace     = "IMAGE_BUILDERS_NAMESPACE"
 
 	EnvAWSAccessKeyID     = "AWS_ACCESS_KEY_ID"
+	EnvGCPAccessKeyID     = "GCP_ACCESS_KEY_ID"
 	EnvAWSSecretAccessKey = "AWS_SECRET_ACCESS_KEY"
+	EnvGCPSecretAccessKey = "GCP_SECRET_ACCESS_KEY"
 
 	EnvAWSECRWithIAMRole = "AWS_ECR_WITH_IAM_ROLE"
 	EnvAWSECRRegion      = "AWS_ECR_REGION"
