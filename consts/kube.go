@@ -35,7 +35,7 @@ const (
 	// nolint: gosec
 	KubeLabelYataiDeployToken    = "yatai.ai/deploy-token"
 	KubeLabelIsBentoImageBuilder = "yatai.ai/is-bento-image-builder"
-	KubeLabelIsModelSeeder = "yatai.ai/is-model-seeder"
+	KubeLabelIsModelSeeder       = "yatai.ai/is-model-seeder"
 	KubeLabelBentoRequest        = "yatai.ai/bento-request"
 
 	KubeLabelYataiOwnerReference = "yatai.ai/owner-reference"
@@ -69,7 +69,8 @@ const (
 	KubeAnnotationARMSAppName                     = "armsPilotCreateAppName"
 	KubeAnnotationYataiImageBuilderSeparateModels = "yatai.ai/yatai-image-builder-separate-models"
 	KubeAnnotationAWSAccessKeySecretName          = "yatai.ai/aws-access-key-secret-name"
-	KubeAnnotationIsMultiTenancy = "yatai.ai/is-multi-tenancy"
+	KubeAnnotationGCPAccessKeySecretName          = "yatai.ai/gcp-access-key-secret"
+	KubeAnnotationIsMultiTenancy                  = "yatai.ai/is-multi-tenancy"
 
 	KubeCreator = "yatai"
 
