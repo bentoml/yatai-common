@@ -35,7 +35,7 @@ const (
 	// nolint: gosec
 	KubeLabelYataiDeployToken    = "yatai.ai/deploy-token"
 	KubeLabelIsBentoImageBuilder = "yatai.ai/is-bento-image-builder"
-	KubeLabelIsModelSeeder = "yatai.ai/is-model-seeder"
+	KubeLabelIsModelSeeder       = "yatai.ai/is-model-seeder"
 	KubeLabelBentoRequest        = "yatai.ai/bento-request"
 
 	KubeLabelYataiOwnerReference = "yatai.ai/owner-reference"
@@ -65,11 +65,12 @@ const (
 	KubeAnnotationPrometheusPort   = "prometheus.io/port"
 	KubeAnnotationPrometheusPath   = "prometheus.io/path"
 
-	KubeAnnotationARMSAutoEnable                  = "armsPilotAutoEnable"
-	KubeAnnotationARMSAppName                     = "armsPilotCreateAppName"
-	KubeAnnotationYataiImageBuilderSeparateModels = "yatai.ai/yatai-image-builder-separate-models"
-	KubeAnnotationAWSAccessKeySecretName          = "yatai.ai/aws-access-key-secret-name"
-	KubeAnnotationIsMultiTenancy = "yatai.ai/is-multi-tenancy"
+	KubeAnnotationARMSAutoEnable                       = "armsPilotAutoEnable"
+	KubeAnnotationARMSAppName                          = "armsPilotCreateAppName"
+	KubeAnnotationYataiImageBuilderSeparateModels      = "yatai.ai/yatai-image-builder-separate-models"
+	KubeAnnotationYataiImageBuilderSeparateLargeLayers = "yatai.ai/yatai-image-builder-separate-large-layers"
+	KubeAnnotationAWSAccessKeySecretName               = "yatai.ai/aws-access-key-secret-name"
+	KubeAnnotationIsMultiTenancy                       = "yatai.ai/is-multi-tenancy"
 
 	KubeCreator = "yatai"
 
