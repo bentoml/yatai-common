@@ -65,12 +65,13 @@ const (
 	KubeAnnotationPrometheusPort   = "prometheus.io/port"
 	KubeAnnotationPrometheusPath   = "prometheus.io/path"
 
-	KubeAnnotationARMSAutoEnable                  = "armsPilotAutoEnable"
-	KubeAnnotationARMSAppName                     = "armsPilotCreateAppName"
-	KubeAnnotationYataiImageBuilderSeparateModels = "yatai.ai/yatai-image-builder-separate-models"
-	KubeAnnotationAWSAccessKeySecretName          = "yatai.ai/aws-access-key-secret-name"
-	KubeAnnotationGCPAccessKeySecretName          = "yatai.ai/gcp-access-key-secret"
-	KubeAnnotationIsMultiTenancy                  = "yatai.ai/is-multi-tenancy"
+	KubeAnnotationARMSAutoEnable                       = "armsPilotAutoEnable"
+	KubeAnnotationARMSAppName                          = "armsPilotCreateAppName"
+	KubeAnnotationYataiImageBuilderSeparateModels      = "yatai.ai/yatai-image-builder-separate-models"
+	KubeAnnotationYataiImageBuilderSeparateLargeLayers = "yatai.ai/yatai-image-builder-separate-large-layers"
+	KubeAnnotationAWSAccessKeySecretName               = "yatai.ai/aws-access-key-secret-name"
+	KubeAnnotationGCPAccessKeySecretName               = "yatai.ai/gcp-access-key-secret"
+	KubeAnnotationIsMultiTenancy                       = "yatai.ai/is-multi-tenancy"
 
 	KubeCreator = "yatai"
 
