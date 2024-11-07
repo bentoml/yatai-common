@@ -69,6 +69,7 @@ const (
 	KubeAnnotationARMSAppName                          = "armsPilotCreateAppName"
 	KubeAnnotationYataiImageBuilderSeparateModels      = "yatai.ai/yatai-image-builder-separate-models"
 	KubeAnnotationYataiImageBuilderSeparateLargeLayers = "yatai.ai/yatai-image-builder-separate-large-layers"
+	KubeAnnotationYataiImageBuilderStoredInS3          = "yatai.ai/yatai-image-builder-stored-in-s3"
 	KubeAnnotationAWSAccessKeySecretName               = "yatai.ai/aws-access-key-secret-name"
 	KubeAnnotationGCPAccessKeySecretName               = "yatai.ai/gcp-access-key-secret"
 	KubeAnnotationIsMultiTenancy                       = "yatai.ai/is-multi-tenancy"
