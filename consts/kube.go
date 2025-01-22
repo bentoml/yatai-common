@@ -60,6 +60,7 @@ const (
 	KubeAnnotationYataiDeploymentId      = "yatai.ai/deployment-id"
 	KubeAnnotationDockerRegistryInsecure = "yatai.ai/docker-registry-insecure"
 	KubeAnnotationHelmReleaseName        = "meta.helm.sh/release-name"
+	KubeAnnotationBentoImageSpec         = "yatai.ai/bento-image-spec"
 
 	KubeAnnotationPrometheusScrape = "prometheus.io/scrape"
 	KubeAnnotationPrometheusPort   = "prometheus.io/port"
