@@ -22,7 +22,6 @@ func NewRedisProbe(cfg RedisConfig) *RedisProbe {
 	client := redis.NewClient(&redis.Options{
 		Addr:     cfg.Addr,
 		Password: cfg.Password,
-		DB:       15,
 	})
 
 	return &RedisProbe{client: client}
