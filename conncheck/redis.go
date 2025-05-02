@@ -12,26 +12,37 @@ import (
 type RedisConfig struct {
 	Addr     string
 	Password string
+	Cluster  bool
 }
 
 type RedisProbe struct {
-	client *redis.Client
+	client redis.UniversalClient
+	addr   string
 }
 
 func NewRedisProbe(cfg RedisConfig) *RedisProbe {
-	client := redis.NewClient(&redis.Options{
-		Addr:     cfg.Addr,
-		Password: cfg.Password,
-	})
+	var client redis.UniversalClient
 
-	return &RedisProbe{client: client}
+	if cfg.Cluster {
+		client = redis.NewClusterClient(&redis.ClusterOptions{
+			Addrs:    []string{cfg.Addr},
+			Password: cfg.Password,
+		})
+	} else {
+		client = redis.NewClient(&redis.Options{
+			Addr:     cfg.Addr,
+			Password: cfg.Password,
+		})
+	}
+
+	return &RedisProbe{client: client, addr: cfg.Addr}
 }
 
 func (p *RedisProbe) Test(ctx context.Context, prefix string) error {
 	testKey := fmt.Sprintf("%s:%d", prefix, time.Now().UnixNano())
 	testValue := "test-value"
 
-	logrus.Infof("Testing Redis connection to %s", p.client.Options().Addr)
+	logrus.Infof("Testing Redis connection to %s", p.addr)
 	err := p.client.Set(ctx, testKey, testValue, 1*time.Minute).Err()
 	if err != nil {
 		logrus.Errorf("Redis write test failed: %v", err)
