@@ -62,6 +62,10 @@ const (
 	KubeAnnotationHelmReleaseName        = "meta.helm.sh/release-name"
 	KubeAnnotationBentoImageSpec         = "yatai.ai/bento-image-spec"
 
+	KubeAnnotationEndpointURL      = "yatai.ai/endpoint-url"
+	KubeAnnotationEndpointStrategy = "yatai.ai/endpoint-strategy"
+	KubeAnnotationEndpointSync     = "yatai.ai/endpoint-sync"
+
 	KubeAnnotationPrometheusScrape = "prometheus.io/scrape"
 	KubeAnnotationPrometheusPort   = "prometheus.io/port"
 	KubeAnnotationPrometheusPath   = "prometheus.io/path"
