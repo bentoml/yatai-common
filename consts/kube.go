@@ -66,6 +66,7 @@ const (
 	KubeAnnotationEndpointStrategy = "yatai.ai/endpoint-strategy"
 	KubeAnnotationEndpointSync     = "yatai.ai/endpoint-sync"
 	KubeAnnotationEndpointClusters = "yatai.ai/endpoint-clusters"
+	KubeAnnotationEndpointWeight   = "yatai.ai/endpoint-weight"
 
 	KubeAnnotationPrometheusScrape = "prometheus.io/scrape"
 	KubeAnnotationPrometheusPort   = "prometheus.io/port"
