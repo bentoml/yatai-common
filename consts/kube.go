@@ -68,6 +68,14 @@ const (
 	KubeAnnotationEndpointClusters = "yatai.ai/endpoint-clusters"
 	KubeAnnotationEndpointWeight   = "yatai.ai/endpoint-weight"
 
+	// Route to multi deployments from different clusters by priority order, priority is configured by user in yatai.ai/endpoint-clusters annotation
+	// traffic will overflow to next cluster when traffic exceeds current cluster capacity
+	KubeAnnotationEndpointStrategyOverflow = "overflow"
+	// Route to multi deployments at weighted random or round robin, weights are configured by user in yatai.ai/endpoint-weight annotation
+	KubeAnnotationEndpointStrategyWeightedRoundRobin = "wrr"
+	// Route to multi deployments at weighted random, weights are applied as the ready replica number (default 1 if no ready replicas) automatically
+	KubeAnnotationEndpointStrategyAuto = "auto"
+
 	KubeAnnotationPrometheusScrape = "prometheus.io/scrape"
 	KubeAnnotationPrometheusPort   = "prometheus.io/port"
 	KubeAnnotationPrometheusPath   = "prometheus.io/path"
