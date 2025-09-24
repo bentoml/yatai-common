@@ -110,6 +110,7 @@ const (
 	KubeConfigMapKeyNetworkConfigIngressAnnotations = "ingress-annotations"
 	KubeConfigMapKeyNetworkConfigIngressPath        = "ingress-path"
 	KubeConfigMapKeyNetworkConfigIngressPathType    = "ingress-path-type"
+	KubeConfigMapKeyNetworkConfigEndpointTLS        = "endpoint-tls"
 
 	KubeConfigMapNameYataiConfig = "yatai"
 
