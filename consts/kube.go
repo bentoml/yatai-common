@@ -129,6 +129,7 @@ const (
 
 	KubeSecretNameYataiImageBuilderEnv = "yatai-image-builder-env"
 	KubeSecretNameYataiDeploymentEnv   = "yatai-deployment-env"
+	KubeSecretNameYataiS3Credentials   = "yatai-org-s3-access-key"
 )
 
 var KubeListEverything = metav1.ListOptions{
