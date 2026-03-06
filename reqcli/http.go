@@ -189,7 +189,7 @@ func (b *JsonRequestBuilder) Do(ctx context.Context) (statusCode int, err error)
 
 	if resp.StatusCode != 200 {
 		msg := fmt.Sprintf("%s %s status=%d, %s", b.method, b.url, resp.StatusCode, body)
-		logrus.Errorf(msg)
+		logrus.Error(msg)
 		err = errors.New(msg)
 		return
 	}
