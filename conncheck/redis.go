@@ -2,6 +2,7 @@ package conncheck
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"time"
 
@@ -10,9 +11,10 @@ import (
 )
 
 type RedisConfig struct {
-	Addr     string
-	Password string
-	Cluster  bool
+	Addr      string
+	Password  string
+	Cluster   bool
+	TLSConfig *tls.Config
 }
 
 type RedisProbe struct {
@@ -25,13 +27,15 @@ func NewRedisProbe(cfg RedisConfig) *RedisProbe {
 
 	if cfg.Cluster {
 		client = redis.NewClusterClient(&redis.ClusterOptions{
-			Addrs:    []string{cfg.Addr},
-			Password: cfg.Password,
+			Addrs:     []string{cfg.Addr},
+			Password:  cfg.Password,
+			TLSConfig: cfg.TLSConfig,
 		})
 	} else {
 		client = redis.NewClient(&redis.Options{
-			Addr:     cfg.Addr,
-			Password: cfg.Password,
+			Addr:      cfg.Addr,
+			Password:  cfg.Password,
+			TLSConfig: cfg.TLSConfig,
 		})
 	}
 
