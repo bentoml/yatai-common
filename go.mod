@@ -8,7 +8,7 @@ require (
 	github.com/minio/minio-go/v7 v7.0.85
 	github.com/panjf2000/ants/v2 v2.4.8
 	github.com/pkg/errors v0.9.1
-	github.com/redis/go-redis/v9 v9.7.0
+	github.com/redis/go-redis/v9 v9.7.3
 	github.com/rs/xid v1.6.0
 	github.com/sirupsen/logrus v1.9.3
 	k8s.io/api v0.25.0
