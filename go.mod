@@ -1,8 +1,6 @@
 module github.com/bentoml/yatai-common
 
-go 1.24.0
-
-toolchain go1.24.8
+go 1.26.10
 
 require (
 	github.com/minio/minio-go/v7 v7.0.85
